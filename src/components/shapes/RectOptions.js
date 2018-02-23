@@ -21,7 +21,7 @@ const styles = theme => ({
     margin: theme.spacing.unit
   },
   colorPickerPaper: {
-    height: 56
+    height: 24
   }
 })
 
@@ -38,7 +38,7 @@ const RectOptions = ({classes, shape, onChangeShape}) => [
   </FormControl>,
   <Grid className={classes.colorPicker} container spacing={8}>
     {colors.map((c, i) =>
-      <Grid item xs={2}>
+      <Grid item xs={1}>
         <Paper
           className={classes.colorPickerPaper} style={{background: c.primary}}
           onClick={() => onChangeShape(applyUpdates(shape, 'color', i))}
