@@ -22,24 +22,13 @@ const snapRectToGrid = rect => ({
   width: snapTo(20, rect.width),
   height: snapTo(20, rect.height)
 })
-const snapConnectionToGrid = connection => ({
-  ...connection,
-  fromCoords: {
-    x: snapTo(20, connection.fromCoords.x),
-    y: snapTo(20, connection.fromCoords.y)
-  },
-  toCoords: {
-    x: snapTo(20, connection.toCoords.x),
-    y: snapTo(20, connection.toCoords.y)
-  }
-})
 
 const resolveConnection = (connection, shapes) => {
   const fromShape = shapes.find(s => s.id === connection.from.id)
   const toShape = shapes.find(s => s.id === connection.to.id)
 
-  const fromCoords = getConnectorPosition(fromShape, connection.from.connector)
-  const toCoords = getConnectorPosition(toShape, connection.to.connector)
+  const fromCoords = getConnectorPosition(snapRectToGrid(fromShape), connection.from.connector)
+  const toCoords = getConnectorPosition(snapRectToGrid(toShape), connection.to.connector)
 
   return {
     ...connection,
@@ -68,11 +57,12 @@ class Canvas extends React.Component {
         <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
           <defs>
             <pattern id='grid' width='20' height='20' patternUnits='userSpaceOnUse'>
-              <path d='M 20 0 L 0 0 0 20' fill='none' stroke='gray' strokeWidth='0.5' />
+              <path d='M 20 0 L 0 0 0 20' fill='none' stroke='#aaa' strokeWidth='0.5' />
             </pattern>
             <style type='text/css'>@import url(http://fonts.googleapis.com/css?family=Roboto);</style>
           </defs>
           <FilterDropShadow id='dropshadow' />
+          <rect x={0} y={0} width='100%' height='100%' fill='#ddd' onClick={this.props.onClearSelection} />
           <rect x={0} y={0} width='100%' height='100%' fill='url(#grid)' onClick={this.props.onClearSelection} />
 
           {this.props.data.shapes.map(r =>
@@ -95,7 +85,7 @@ class Canvas extends React.Component {
           )}
 
           {this.props.data.connections.map(c => resolveConnection(c, this.props.data.shapes)).map(c =>
-            <Connection {...snapConnectionToGrid(c)} />
+            <Connection {...c} />
           )}
         </svg>
       </div>

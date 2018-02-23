@@ -10,6 +10,8 @@ import {DragDropContextProvider} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import Canvas from './components/Canvas'
 import Sidebar from './components/Sidebar'
+import Palette from './components/Palette'
+import Options from './components/Options'
 import ShapeBuilder from './shapes/ShapeBuilder'
 import {getConnectorPosition} from './shapes/Shape'
 import { getConnectors } from './shapes/rect/Rect'
@@ -266,6 +268,12 @@ class App extends Component {
             </Toolbar>
           </AppBar>
           <main className={this.props.classes.content}>
+            <Palette />
+            <Options
+              shapes={this.state.data.shapes}
+              selected={this.state.selected}
+              onChangeShape={this.onChangeShape}
+            />
             <Canvas
               data={this.state.data}
               selected={this.state.selected}
@@ -280,11 +288,11 @@ class App extends Component {
               onAddShape={this.onAddShape}
             />
           </main>
-          <Sidebar
+          {/* <Sidebar
             shapes={this.state.data.shapes}
             selected={this.state.selected}
             onChangeShape={this.onChangeShape}
-          />
+          /> */}
         </div>
       </DragDropContextProvider>
     )

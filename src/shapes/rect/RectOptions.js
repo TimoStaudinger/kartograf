@@ -1,16 +1,16 @@
 import React from 'react'
-import Divider from 'material-ui/Divider';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Input, { InputLabel } from 'material-ui/Input';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
+import Divider from 'material-ui/Divider'
+import { FormControl, FormHelperText } from 'material-ui/Form'
+import Input, { InputLabel } from 'material-ui/Input'
+import { withStyles } from 'material-ui/styles'
+import Paper from 'material-ui/Paper'
+import Grid from 'material-ui/Grid'
+import Typography from 'material-ui/Typography'
 import colors from '../../colors'
 
 const styles = theme => ({
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
   colorPicker: {
     padding: theme.spacing.unit,
@@ -21,7 +21,10 @@ const styles = theme => ({
     margin: theme.spacing.unit
   },
   colorPickerPaper: {
-    height: 24
+    height: 20
+  },
+  colorPickerGridItem: {
+    padding: '2px !important'
   }
 })
 
@@ -32,17 +35,19 @@ const applyUpdates = (prevRect, field, value) => ({
 
 const RectOptions = ({classes, shape, onChangeShape}) => [
   <Typography variant='headline' component='h3' className={classes.header}>Options</Typography>,
-  <FormControl margin="normal" className={classes.formControl}>
-    <InputLabel htmlFor="name-simple">Label</InputLabel>
-    <Input id="name-simple" value={shape.label} onChange={e => onChangeShape(applyUpdates(shape, 'label', e.target.value))} />
+  <FormControl margin='normal' className={classes.formControl}>
+    <InputLabel htmlFor='name-simple'>Label</InputLabel>
+    <Input id='name-simple' value={shape.label} onChange={e => onChangeShape(applyUpdates(shape, 'label', e.target.value))} />
   </FormControl>,
   <Grid className={classes.colorPicker} container spacing={8}>
     {colors.map((c, i) =>
-      <Grid item xs={1}>
+      <Grid className={classes.colorPickerGridItem} item xs={1}>
         <Paper
+          square
+          elevation={1}
           className={classes.colorPickerPaper} style={{background: c.primary}}
           onClick={() => onChangeShape(applyUpdates(shape, 'color', i))}
-        ></Paper>
+         />
       </Grid>
     )}
   </Grid>

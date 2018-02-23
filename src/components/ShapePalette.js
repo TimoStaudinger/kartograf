@@ -1,15 +1,15 @@
 import React from 'react'
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import CheckboxOutlineBlankIcon from 'material-ui-icons/CheckBoxOutlineBlank';
-import InsertEmoticonIcon from 'material-ui-icons/InsertEmoticon';
-import { withStyles } from 'material-ui/styles';
+import Paper from 'material-ui/Paper'
+import Grid from 'material-ui/Grid'
+import CheckboxOutlineBlankIcon from 'material-ui-icons/CheckBoxOutlineBlank'
+import InsertEmoticonIcon from 'material-ui-icons/InsertEmoticon'
+import { withStyles } from 'material-ui/styles'
 import { DragSource } from 'react-dnd'
-import Typography from 'material-ui/Typography';
+import Typography from 'material-ui/Typography'
 
 const styles = theme => ({
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
   header: {
     margin: theme.spacing.unit
@@ -30,7 +30,7 @@ const styles = theme => ({
 })
 
 const shapeDragSource = {
-  beginDrag(props) {
+  beginDrag (props) {
     return {
       type: props.type
     }
@@ -52,10 +52,11 @@ const Option = DragSource('shape', shapeDragSource, (connect, monitor) => ({
   isDragging: monitor.isDragging()
 }))(({connectDragSource, classes, Icon}) =>
   <Grid item xs={4}>
-  {connectDragSource(<div>
-    <Paper
-      className={classes.colorPickerPaper}
-    ><Icon fontSize={true} className={classes.icon} /></Paper>
+    {connectDragSource(<div>
+      <Paper
+        elevation={2}
+        className={classes.colorPickerPaper}
+      ><Icon fontSize className={classes.icon} /></Paper>
     </div>)}
   </Grid>
 )
