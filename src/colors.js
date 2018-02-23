@@ -1,22 +1,24 @@
 const colors = [
-  {fill: '#F44336', stroke: '#B71C1C'},
-  {fill: '#E91E63', stroke: '#880E4F'},
-  {fill: '#9C27B0', stroke: '#4A148C'},
-  {fill: '#673AB7', stroke: '#311B92'},
-  {fill: '#3F51B5', stroke: '#1A237E'},
-  {fill: '#2196F3', stroke: '#0D47A1'},
-  {fill: '#03A9F4', stroke: '#01579B'},
-  {fill: '#00BCD4', stroke: '#006064'},
-  {fill: '#009688', stroke: '#004D40'},
-  {fill: '#4CAF50', stroke: '#1B5E20'},
-  {fill: '#8BC34A', stroke: '#33691E'},
-  {fill: '#CDDC39', stroke: '#827717'},
-  {fill: '#FFEB3B', stroke: '#F57F17'},
-  {fill: '#FFC107', stroke: '#FF6F00'},
-  {fill: '#FF9800', stroke: '#E65100'},
-  {fill: '#FF5722', stroke: '#BF360C'},
-  {fill: '#9E9E9E', stroke: '#212121'},
-  {fill: '#607D8B', stroke: '#263238'}
+  {primary: '#B71C1C', secondary: '#EF9A9A', text: '#FFF'},
+  {primary: '#E65100', secondary: '#FF8A80', text: '#FFF'},
+  {primary: '#33691E', secondary: '#FF8A80', text: '#FFF'},
+  {primary: '#004D40', secondary: '#FF8A80', text: '#FFF'},
+  {primary: '#0D47A1', secondary: '#FF8A80', text: '#FFF'},
+  {primary: '#311B92', secondary: '#FF8A80', text: '#FFF'},
+
+  {primary: '#EF5350', secondary: '#B71C1C', text: '#333'},
+  {primary: '#FFA726', secondary: '#FF8A80', text: '#333'},
+  {primary: '#9CCC65', secondary: '#FF8A80', text: '#333'},
+  {primary: '#26A69A', secondary: '#FF8A80', text: '#333'},
+  {primary: '#42A5F5', secondary: '#FF8A80', text: '#333'},
+  {primary: '#7E57C2', secondary: '#FF8A80', text: '#333'},
+
+  {primary: '#EF9A9A', secondary: '#B71C1C', text: '#333'},
+  {primary: '#FFCC80', secondary: '#FF8A80', text: '#333'},
+  {primary: '#C5E1A5', secondary: '#FF8A80', text: '#333'},
+  {primary: '#80CBC4', secondary: '#FF8A80', text: '#333'},
+  {primary: '#90CAF9', secondary: '#FF8A80', text: '#333'},
+  {primary: '#B39DDB', secondary: '#FF8A80', text: '#333'}
 ]
 
 export default colors

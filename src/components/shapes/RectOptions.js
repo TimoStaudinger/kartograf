@@ -40,7 +40,7 @@ const RectOptions = ({classes, shape, onChangeShape}) => [
     {colors.map((c, i) =>
       <Grid item xs={2}>
         <Paper
-          className={classes.colorPickerPaper} style={{background: c.fill}}
+          className={classes.colorPickerPaper} style={{background: c.primary}}
           onClick={() => onChangeShape(applyUpdates(shape, 'color', i))}
         ></Paper>
       </Grid>

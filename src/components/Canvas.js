@@ -86,7 +86,7 @@ class Canvas extends React.Component {
           {this.props.data.shapes.map(r =>
             <Shape
               {...snapToGrid(r)}
-              {...colors[r.color]}
+              color={colors[r.color]}
               id={r.id}
               filter='dropshadow'
               moveRect={this.props.onMoveRect}
