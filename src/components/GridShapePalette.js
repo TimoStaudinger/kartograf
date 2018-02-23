@@ -57,7 +57,7 @@ const shapeTypes = [
   {name: 'Box', type: 'rect'},
   {name: 'Icon', type: 'rect'},
   {name: 'Decision', type: 'rect'},
-  {name: 'Foobar', type: 'rect'},
+  {name: 'Foobar', type: 'rect'}
 ]
 
 const ShapePalette = ({classes}) => [

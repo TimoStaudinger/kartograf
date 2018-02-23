@@ -18,7 +18,8 @@ const styles = theme => ({
     width: '100%'
   },
   header: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    color: '#616161'
   },
   colorPickerPaper: {
     height: 20

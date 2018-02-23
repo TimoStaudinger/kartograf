@@ -6,7 +6,7 @@ import ShapeOptions from '../shapes/ShapeOptions'
 const styles = theme => ({
   paper: {
     position: 'absolute',
-    top: 258,
+    top: 100,
     right: 50,
     zIndex: 1000,
     width: 300,
@@ -14,12 +14,13 @@ const styles = theme => ({
   }
 })
 
-const Options = ({classes, shapes, selected, onChangeShape}) =>
+const Options = ({classes, shapes, selected, onChangeShape}) => selected && selected.length ? (
   <Paper elevation={8} className={classes.paper}>
     <ShapeOptions
       shape={shapes.find(s => s.id === selected[0])}
       onChangeShape={onChangeShape}
     />
   </Paper>
+) : null
 
 export default withStyles(styles)(Options)

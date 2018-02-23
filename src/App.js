@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Button from 'material-ui/Button'
+import AddIcon from 'material-ui-icons/Add'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
@@ -9,8 +11,6 @@ import classNames from 'classnames'
 import {DragDropContextProvider} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import Canvas from './components/Canvas'
-import Sidebar from './components/Sidebar'
-import Palette from './components/Palette'
 import Options from './components/Options'
 import ShapeBuilder from './shapes/ShapeBuilder'
 import {getConnectorPosition} from './shapes/Shape'
@@ -65,6 +65,11 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing.unit * 4,
+    right: theme.spacing.unit * 4
   }
 })
 
@@ -268,7 +273,7 @@ class App extends Component {
             </Toolbar>
           </AppBar>
           <main className={this.props.classes.content}>
-            <Palette />
+            {/* <Palette /> */}
             <Options
               shapes={this.state.data.shapes}
               selected={this.state.selected}
@@ -288,6 +293,9 @@ class App extends Component {
               onAddShape={this.onAddShape}
             />
           </main>
+          <Button onClick={() => this.onAddShape({x: 300, y: 300, type: 'rect'})} variant='fab' className={this.props.classes.fab} color='primary'>
+            <AddIcon />
+          </Button>
           {/* <Sidebar
             shapes={this.state.data.shapes}
             selected={this.state.selected}
