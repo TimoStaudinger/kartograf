@@ -1,7 +1,8 @@
 import './Canvas.css'
 import React from 'react'
-import FilterDropShadow from './FilterDropShadow'
-import Rect from './Rect'
+import FilterDropShadow from './utils/FilterDropShadow'
+import Shape from './shapes/Shape'
+import colors from '../colors'
 
 const snapTo = (grid, value) => {
   const rem = value % grid
@@ -39,12 +40,12 @@ const getInitialConnectorPosition = (connector, x, y, width, height) => {
   }
 }
 
-const resolveConnections = (connections, objects) => {
+const resolveConnections = (connections, shapes) => {
   const resolvedConnections = {...connections}
 
   Object.keys(resolvedConnections).forEach(position => {
     if (resolvedConnections[position].connectedTo) {
-      const remote = objects.find(o => o.id === resolvedConnections[position].connectedTo.id)
+      const remote = shapes.find(o => o.id === resolvedConnections[position].connectedTo.id)
       const remoteConnector = getInitialConnectorPosition(resolvedConnections[position].connectedTo.position, remote.x, remote.y, remote.width, remote.height)
       resolvedConnections[position].x = snapTo(20, remoteConnector.x)
       resolvedConnections[position].y = snapTo(20, remoteConnector.y)
@@ -55,28 +56,9 @@ const resolveConnections = (connections, objects) => {
 }
 
 class Canvas extends React.Component {
-  constructor () {
-    super()
-
-    this.onSelect = this.onSelect.bind(this)
-    this.onClearSelection = this.onClearSelection.bind(this)
-
-    this.state = {
-      selected: []
-    }
-  }
-
-  onSelect (id) {
-    this.setState({selected: [id]})
-  }
-
-  onClearSelection () {
-    this.setState({selected: []})
-  }
-
   render () {
     return (
-      <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, zIndex: -1, overflow: 'hidden'}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden'}}>
         <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
           <defs>
             <pattern id='grid' width='20' height='20' patternUnits='userSpaceOnUse'>
@@ -85,21 +67,22 @@ class Canvas extends React.Component {
             <style type='text/css'>@import url(http://fonts.googleapis.com/css?family=Roboto);</style>
           </defs>
           <FilterDropShadow id='dropshadow' />
-          <rect x={0} y={0} width='100%' height='100%' fill='url(#grid)' onClick={this.onClearSelection} />
+          <rect x={0} y={0} width='100%' height='100%' fill='url(#grid)' onClick={this.props.onClearSelection} />
 
-          {this.props.data.rects.map(r =>
-            <Rect
+          {this.props.data.shapes.map(r =>
+            <Shape
               {...snapToGrid(r)}
+              {...colors[r.color]}
               id={r.id}
               filter='dropshadow'
               moveRect={this.props.onMoveRect}
               moveConnector={this.props.onMoveConnector}
               dropConnector={this.props.onDropConnector}
               onResize={this.props.onResize}
-              onSelect={this.onSelect}
+              onSelect={this.props.onSelect}
               currentDropTarget={this.props.data.currentDropTarget}
-              connections={resolveConnections(r.connections, this.props.data.rects)}
-              selected={this.state.selected}
+              connections={resolveConnections(r.connections, this.props.data.shapes)}
+              selected={this.props.selected}
             />
           )}
         </svg>

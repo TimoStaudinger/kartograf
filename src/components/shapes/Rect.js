@@ -1,9 +1,9 @@
 import React from 'react'
 import {DraggableCore} from 'react-draggable'
-import Connector from './Connector'
-import Resizer from './Resizer'
+import Connector from '../utils/Connector'
+import Resizer from '../utils/Resizer'
 
-const Rect = ({id, x, y, height, width, fill, filter, connections, moveRect, moveConnector, dropConnector, onResize, currentDropTarget, onSelect, selected}) =>
+const Rect = ({id, x, y, label, height, width, fill, filter, connections, moveRect, moveConnector, dropConnector, onResize, currentDropTarget, onSelect, selected}) =>
   <g>
     <DraggableCore onDrag={(_, d) => moveRect(id, d.deltaX, d.deltaY)}>
       <g onClick={() => onSelect(id)}>
@@ -28,7 +28,7 @@ const Rect = ({id, x, y, height, width, fill, filter, connections, moveRect, mov
           textAnchor='middle'
           alignmentBaseline='central'
         >
-          Hello World
+          {label}
         </text>
 
       </g>
