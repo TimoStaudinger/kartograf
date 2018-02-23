@@ -5,6 +5,7 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
 import colors from '../../colors'
 
 const styles = theme => ({
@@ -15,6 +16,9 @@ const styles = theme => ({
     padding: theme.spacing.unit,
     margin: 0,
     width: '100%'
+  },
+  header: {
+    margin: theme.spacing.unit
   },
   colorPickerPaper: {
     height: 56
@@ -27,6 +31,7 @@ const applyUpdates = (prevRect, field, value) => ({
 })
 
 const RectOptions = ({classes, shape, onChangeShape}) => [
+  <Typography variant='headline' component='h3' className={classes.header}>Options</Typography>,
   <FormControl margin="normal" className={classes.formControl}>
     <InputLabel htmlFor="name-simple">Label</InputLabel>
     <Input id="name-simple" value={shape.label} onChange={e => onChangeShape(applyUpdates(shape, 'label', e.target.value))} />

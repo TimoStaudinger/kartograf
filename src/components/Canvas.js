@@ -2,6 +2,7 @@ import './Canvas.css'
 import React from 'react'
 import FilterDropShadow from './utils/FilterDropShadow'
 import Shape from './shapes/Shape'
+import {DropTarget} from 'react-dnd'
 import colors from '../colors'
 
 const snapTo = (grid, value) => {
@@ -55,9 +56,22 @@ const resolveConnections = (connections, shapes) => {
   return resolvedConnections
 }
 
+const shapeDropTarget = {
+  drop (props, monitor) {
+    const position = monitor.getClientOffset()
+    const shape = {
+      x: position.x,
+      y: position.y,
+      type: monitor.getItem().type
+    }
+    props.onAddShape(shape)
+    return shape
+  }
+}
+
 class Canvas extends React.Component {
   render () {
-    return (
+    return this.props.connectDropTarget(
       <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden'}}>
         <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
           <defs>
@@ -91,4 +105,8 @@ class Canvas extends React.Component {
   }
 }
 
-export default Canvas
+export default DropTarget('shape', shapeDropTarget, (connector, monitor) => ({
+  connectDropTarget: connector.dropTarget(),
+  isOver: monitor.isOver(),
+  canDrop: monitor.canDrop()
+}))(Canvas)

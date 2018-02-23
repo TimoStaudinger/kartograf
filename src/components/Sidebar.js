@@ -2,6 +2,8 @@ import React from 'react'
 import Drawer from 'material-ui/Drawer';
 import { withStyles } from 'material-ui/styles';
 import ShapeOptions from './shapes/ShapeOptions'
+import Divider from 'material-ui/Divider';
+import ShapePalette from './ShapePalette'
 
 const sidebarWidth = 400
 
@@ -16,6 +18,10 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
+  },
+  divider: {
+    marginTop: 20,
+    marginBottom: 20
   },
   menuButton: {
     marginLeft: -12,
@@ -60,6 +66,8 @@ const Sidebar = ({classes, shapes, selected, onChangeShape}) =>
     }}
     anchor='right'
   >
+    <ShapePalette />
+    <Divider className={classes.divider} />
     <ShapeOptions
       shape={shapes.find(s => s.id === selected[0])}
       onChangeShape={onChangeShape}

@@ -6,11 +6,13 @@ import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import { withStyles } from 'material-ui/styles';
-import uuid from 'uuid/v4'
 import classNames from 'classnames';
+import {DragDropContextProvider} from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 import Canvas from './components/Canvas'
 import Sidebar from './components/Sidebar'
 import colors from './colors'
+import ShapeBuilder from './components/shapes/ShapeBuilder'
 
 const sidebarWidth = 400
 
@@ -64,10 +66,6 @@ const styles = theme => ({
   },
 })
 
-const rectTemplate = {
-  strokeWidth: 0
-}
-
 const snapTo = (grid, value) => {
   const rem = value % grid
   if (rem < grid / 2) {
@@ -76,23 +74,6 @@ const snapTo = (grid, value) => {
     return value - rem + grid
   }
 }
-
-const rand = (min, max) => Math.round((Math.random() * (max - min))) + min
-const generateRect = () => ({
-  ...rectTemplate,
-  id: uuid(),
-  x: rand(0, 30) * 20,
-  y: rand(0, 30) * 20,
-  width: rand(1, 2) * 80,
-  height: rand(1, 2) * 80,
-  color: rand(0, colors.length - 1),
-  connections: {
-    left: {connectedTo: null},
-    right: {connectedTo: null},
-    top: {connectedTo: null},
-    bottom: {connectedTo: null}
-  }
-})
 
 const getInitialConnectorPosition = (connector, x, y, width, height) => {
   switch (connector) {
@@ -148,7 +129,7 @@ class App extends Component {
     this.onMoveConnector = this.onMoveConnector.bind(this)
     this.onMoveRect = this.onMoveRect.bind(this)
     this.onResize = this.onResize.bind(this)
-    this.onAddRect = this.onAddRect.bind(this)
+    this.onAddShape = this.onAddShape.bind(this)
     this.onSelect = this.onSelect.bind(this)
     this.onClearSelection = this.onClearSelection.bind(this)
     this.onChangeShape = this.onChangeShape.bind(this)
@@ -283,11 +264,11 @@ class App extends Component {
     }))
   }
   
-  onAddRect () {
+  onAddShape (shape) {
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: [...state.data.shapes, generateRect()]
+        shapes: [...state.data.shapes, ShapeBuilder.create(shape)]
       }
     }))
   }
@@ -306,36 +287,39 @@ class App extends Component {
 
   render () {
     return (
-      <div className={this.props.classes.appFrame}>
-        <AppBar className={classNames(this.props.classes.appBar, this.props.classes[`appBar-right`])}>
-          <Toolbar>
-            <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="title" color="inherit" className={this.props.classes.flex}>
-              Kartograf
-            </Typography>
-            <Button color="inherit" onClick={this.onAddRect}>Add element</Button>
-          </Toolbar>
-        </AppBar>
-        <main className={this.props.classes.content}>
-          <Canvas
-            data={this.state.data}
+      <DragDropContextProvider backend={HTML5Backend}>
+        <div className={this.props.classes.appFrame}>
+          <AppBar className={classNames(this.props.classes.appBar, this.props.classes[`appBar-right`])}>
+            <Toolbar>
+              <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" className={this.props.classes.flex}>
+                Kartograf
+              </Typography>
+              <Button color="inherit" onClick={this.onAddShape}>Add element</Button>
+            </Toolbar>
+          </AppBar>
+          <main className={this.props.classes.content}>
+            <Canvas
+              data={this.state.data}
+              selected={this.state.selected}
+              onMoveRect={this.onMoveRect}
+              onMoveConnector={this.onMoveConnector}
+              onDropConnector={this.onDropConnector}
+              onResize={this.onResize}
+              onSelect={this.onSelect}
+              onClearSelection={this.onClearSelection}
+              onAddShape={this.onAddShape}
+            />
+          </main>
+          <Sidebar
+            shapes={this.state.data.shapes}
             selected={this.state.selected}
-            onMoveRect={this.onMoveRect}
-            onMoveConnector={this.onMoveConnector}
-            onDropConnector={this.onDropConnector}
-            onResize={this.onResize}
-            onSelect={this.onSelect}
-            onClearSelection={this.onClearSelection}
+            onChangeShape={this.onChangeShape}
           />
-        </main>
-        <Sidebar
-          shapes={this.state.data.shapes}
-          selected={this.state.selected}
-          onChangeShape={this.onChangeShape}
-        />
-      </div>
+        </div>
+      </DragDropContextProvider>
     )
   }
 }
