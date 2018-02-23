@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import Button from 'material-ui/Button'
-import AddIcon from 'material-ui-icons/Add'
+import BrushIcon from 'material-ui-icons/Brush'
+import ShareIcon from 'material-ui-icons/Share'
+import FileDownloadIcon from 'material-ui-icons/FileDownload'
+import MenuIcon from 'material-ui-icons/Menu'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
 import IconButton from 'material-ui/IconButton'
-import MenuIcon from 'material-ui-icons/Menu'
 import { withStyles } from 'material-ui/styles'
 import classNames from 'classnames'
 import {DragDropContextProvider} from 'react-dnd'
@@ -15,6 +17,8 @@ import Options from './components/Options'
 import ShapeBuilder from './shapes/ShapeBuilder'
 import {getConnectorPosition} from './shapes/Shape'
 import { getConnectors } from './shapes/rect/Rect'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import theme from './components/Theme'
 
 const sidebarWidth = 400
 
@@ -70,6 +74,12 @@ const styles = theme => ({
     position: 'absolute',
     bottom: theme.spacing.unit * 4,
     right: theme.spacing.unit * 4
+  },
+  button: {
+    margin: theme.spacing.unit
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit
   }
 })
 
@@ -260,49 +270,60 @@ class App extends Component {
     console.log(currentDropTarget)
 
     return (
-      <DragDropContextProvider backend={HTML5Backend}>
-        <div className={this.props.classes.appFrame}>
-          <AppBar className={classNames(this.props.classes.appBar, this.props.classes[`appBar-right`])}>
-            <Toolbar>
-              <IconButton className={this.props.classes.menuButton} color='inherit' aria-label='Menu'>
-                <MenuIcon />
-              </IconButton>
-              <Typography variant='title' color='inherit' className={this.props.classes.flex}>
-                Kartograf
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <main className={this.props.classes.content}>
-            {/* <Palette /> */}
-            <Options
+      <MuiThemeProvider theme={theme}>
+        <DragDropContextProvider backend={HTML5Backend}>
+          <div className={this.props.classes.appFrame}>
+            <AppBar className={classNames(this.props.classes.appBar, this.props.classes[`appBar-right`])}>
+              <Toolbar>
+                <IconButton className={this.props.classes.menuButton} color='inherit' aria-label='Menu'>
+                  <MenuIcon />
+                </IconButton>
+                <Typography variant='title' color='inherit' className={this.props.classes.flex}>
+                  Kartograf
+                </Typography>
+                <Button color='inherit'>
+                  <ShareIcon />
+                </Button>
+                <Button color='inherit'>
+                  <FileDownloadIcon />
+                </Button>
+                <Button color='inherit'>
+                  Sign in
+                </Button>
+              </Toolbar>
+            </AppBar>
+            <main className={this.props.classes.content}>
+              {/* <Palette /> */}
+              <Options
+                shapes={this.state.data.shapes}
+                selected={this.state.selected}
+                onChangeShape={this.onChangeShape}
+              />
+              <Canvas
+                data={this.state.data}
+                selected={this.state.selected}
+                currentDropTarget={currentDropTarget}
+                connecting={this.state.connecting}
+                onMoveRect={this.onMoveRect}
+                onMoveConnector={this.onMoveConnector}
+                onDropConnector={this.onDropConnector}
+                onResize={this.onResize}
+                onSelect={this.onSelect}
+                onClearSelection={this.onClearSelection}
+                onAddShape={this.onAddShape}
+              />
+            </main>
+            <Button onClick={() => this.onAddShape({x: 300, y: 300, type: 'rect'})} variant='fab' className={this.props.classes.fab} color='secondary'>
+              <BrushIcon />
+            </Button>
+            {/* <Sidebar
               shapes={this.state.data.shapes}
               selected={this.state.selected}
               onChangeShape={this.onChangeShape}
-            />
-            <Canvas
-              data={this.state.data}
-              selected={this.state.selected}
-              currentDropTarget={currentDropTarget}
-              connecting={this.state.connecting}
-              onMoveRect={this.onMoveRect}
-              onMoveConnector={this.onMoveConnector}
-              onDropConnector={this.onDropConnector}
-              onResize={this.onResize}
-              onSelect={this.onSelect}
-              onClearSelection={this.onClearSelection}
-              onAddShape={this.onAddShape}
-            />
-          </main>
-          <Button onClick={() => this.onAddShape({x: 300, y: 300, type: 'rect'})} variant='fab' className={this.props.classes.fab} color='primary'>
-            <AddIcon />
-          </Button>
-          {/* <Sidebar
-            shapes={this.state.data.shapes}
-            selected={this.state.selected}
-            onChangeShape={this.onChangeShape}
-          /> */}
-        </div>
-      </DragDropContextProvider>
+            /> */}
+          </div>
+        </DragDropContextProvider>
+      </MuiThemeProvider>
     )
   }
 }

@@ -43,7 +43,7 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
         <text
           x={x + width / 2}
           y={y + height / 2}
-          fontSize={Math.min(30, height - 10)}
+          fontSize={Math.min(20, height - 10)}
           fontFamily='Roboto'
           fill={color.text}
           textAnchor='middle'
