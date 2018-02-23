@@ -1,7 +1,8 @@
 import './Canvas.css'
 import React from 'react'
 import FilterDropShadow from './utils/FilterDropShadow'
-import Shape from './shapes/Shape'
+import Shape, {getConnectorPosition} from '../shapes/Shape'
+import Connection from './Connection'
 import {DropTarget} from 'react-dnd'
 import colors from '../colors'
 
@@ -14,46 +15,37 @@ const snapTo = (grid, value) => {
   }
 }
 
-const snapToGrid = rect => ({
+const snapRectToGrid = rect => ({
   ...rect,
   x: snapTo(20, rect.x),
   y: snapTo(20, rect.y),
   width: snapTo(20, rect.width),
   height: snapTo(20, rect.height)
 })
-
-const getInitialConnectorPosition = (connector, x, y, width, height) => {
-  switch (connector) {
-    case 'top':
-      return {x: x + width / 2, y}
-
-    case 'bottom':
-      return {x: x + width / 2, y: y + height}
-
-    case 'left':
-      return {x, y: y + height / 2}
-
-    case 'right':
-      return {x: x + width, y: y + height / 2}
-
-    default:
-      return {x, y}
+const snapConnectionToGrid = connection => ({
+  ...connection,
+  fromCoords: {
+    x: snapTo(20, connection.fromCoords.x),
+    y: snapTo(20, connection.fromCoords.y)
+  },
+  toCoords: {
+    x: snapTo(20, connection.toCoords.x),
+    y: snapTo(20, connection.toCoords.y)
   }
-}
+})
 
-const resolveConnections = (connections, shapes) => {
-  const resolvedConnections = {...connections}
+const resolveConnection = (connection, shapes) => {
+  const fromShape = shapes.find(s => s.id === connection.from.id)
+  const toShape = shapes.find(s => s.id === connection.to.id)
 
-  Object.keys(resolvedConnections).forEach(position => {
-    if (resolvedConnections[position].connectedTo) {
-      const remote = shapes.find(o => o.id === resolvedConnections[position].connectedTo.id)
-      const remoteConnector = getInitialConnectorPosition(resolvedConnections[position].connectedTo.position, remote.x, remote.y, remote.width, remote.height)
-      resolvedConnections[position].x = snapTo(20, remoteConnector.x)
-      resolvedConnections[position].y = snapTo(20, remoteConnector.y)
-    }
-  })
+  const fromCoords = getConnectorPosition(fromShape, connection.from.connector)
+  const toCoords = getConnectorPosition(toShape, connection.to.connector)
 
-  return resolvedConnections
+  return {
+    ...connection,
+    fromCoords,
+    toCoords
+  }
 }
 
 const shapeDropTarget = {
@@ -85,7 +77,7 @@ class Canvas extends React.Component {
 
           {this.props.data.shapes.map(r =>
             <Shape
-              {...snapToGrid(r)}
+              {...snapRectToGrid(r)}
               color={colors[r.color]}
               id={r.id}
               filter='dropshadow'
@@ -94,10 +86,16 @@ class Canvas extends React.Component {
               dropConnector={this.props.onDropConnector}
               onResize={this.props.onResize}
               onSelect={this.props.onSelect}
-              currentDropTarget={this.props.data.currentDropTarget}
-              connections={resolveConnections(r.connections, this.props.data.shapes)}
-              selected={this.props.selected}
+              isSelected={this.props.selected.some(sel => sel === r.id)}
+              currentDropTarget={this.props.currentDropTarget && this.props.currentDropTarget.id === r.id ? this.props.currentDropTarget.connector : null}
+              isConnecting={!!this.props.connecting}
+              isConnectingMe={this.props.connecting && this.props.connecting.origin.id === r.id}
+              connecting={this.props.connecting && this.props.connecting.origin.id === r.id ? this.props.connecting : null}
             />
+          )}
+
+          {this.props.data.connections.map(c => resolveConnection(c, this.props.data.shapes)).map(c =>
+            <Connection {...snapConnectionToGrid(c)} />
           )}
         </svg>
       </div>

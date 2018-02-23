@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
-import { withStyles } from 'material-ui/styles';
-import classNames from 'classnames';
+import Typography from 'material-ui/Typography'
+import IconButton from 'material-ui/IconButton'
+import MenuIcon from 'material-ui-icons/Menu'
+import { withStyles } from 'material-ui/styles'
+import classNames from 'classnames'
 import {DragDropContextProvider} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import Canvas from './components/Canvas'
 import Sidebar from './components/Sidebar'
-import colors from './colors'
-import ShapeBuilder from './components/shapes/ShapeBuilder'
+import ShapeBuilder from './shapes/ShapeBuilder'
+import {getConnectorPosition} from './shapes/Shape'
+import { getConnectors } from './shapes/rect/Rect'
 
 const sidebarWidth = 400
 
@@ -23,14 +23,14 @@ const styles = theme => ({
     height: 430,
     marginTop: theme.spacing.unit * 3,
     zIndex: 1,
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   flex: {
-    flex: 1,
+    flex: 1
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20,
+    marginRight: 20
   },
   appFrame: {
     position: 'absolute',
@@ -49,7 +49,7 @@ const styles = theme => ({
     position: 'relative',
     height: 'calc(100% - 64px)',
     marginTop: 64,
-    width: sidebarWidth,
+    width: sidebarWidth
   },
   drawerHeader: theme.mixins.toolbar,
   content: {
@@ -58,67 +58,38 @@ const styles = theme => ({
     height: 'calc(100% - 64px)',
     marginTop: 56,
     [theme.breakpoints.up('sm')]: {
-      marginTop: 64,
-    },
+      marginTop: 64
+    }
   },
   formControl: {
-    margin: theme.spacing.unit,
-  },
+    margin: theme.spacing.unit
+  }
 })
 
-const snapTo = (grid, value) => {
-  const rem = value % grid
-  if (rem < grid / 2) {
-    return value - rem
-  } else {
-    return value - rem + grid
-  }
-}
+const findAdjacentConnector = (origin, x, y, shapes, threshold = 20) => {
+  const originShape = shapes.find(s => s.id === origin.id)
 
-const getInitialConnectorPosition = (connector, x, y, width, height) => {
-  switch (connector) {
-    case 'top':
-      return {x: x + width / 2, y}
+  let adjacentConnector = null
+  shapes.find(shape => {
+    if (shape === originShape) return false
 
-    case 'bottom':
-      return {x: x + width / 2, y: y + height}
-
-    case 'left':
-      return {x, y: y + height / 2}
-
-    case 'right':
-      return {x: x + width, y: y + height / 2}
-
-    default:
-      return {x, y}
-  }
-}
-
-const findAdjacentConnector = (id, x, y, shapes) => {
-  const threshold = 20
-
-  let connector = null
-  shapes.find(o => {
-    if (o.id === id) return false
-
-    return Object.keys(o.connections).find(position => {
+    const connectors = getConnectors(shape)
+    return connectors.find(connector => {
+      const connectorPosition = getConnectorPosition(shape, connector)
       if (
-        !o.connections[position].connectedTo &&
-        !o.connections[position].x &&
-        !o.connections[position].y &&
-        Math.abs(getInitialConnectorPosition(position, o.x, o.y, o.width, o.height).x - x) < threshold &&
-        Math.abs(getInitialConnectorPosition(position, o.x, o.y, o.width, o.height).y - y) < threshold
+        Math.abs(connectorPosition.x - x) < threshold &&
+        Math.abs(connectorPosition.y - y) < threshold
       ) {
-        connector = {
-          id: o.id,
-          position
+        adjacentConnector = {
+          id: shape.id,
+          connector
         }
         return true
       }
     })
   })
 
-  return connector
+  return adjacentConnector
 }
 
 class App extends Component {
@@ -137,9 +108,9 @@ class App extends Component {
     this.state = {
       data: {
         shapes: [],
-        currentDropTarget: null,
-        selected: []
+        connections: []
       },
+      connecting: null,
       selected: []
     }
   }
@@ -164,55 +135,44 @@ class App extends Component {
     }))
   }
 
-  onMoveConnector (id, connector, dx, dy) {
+  onMoveConnector (origin, dx, dy) {
     this.setState(state => {
-      const prevRect = state.data.shapes.find(r => r.id === id)
-      const newRect = {
-        ...prevRect,
-        connections: {
-          ...prevRect.connections,
-          [connector]: {
-            connectedTo: null,
-            x: ((prevRect.connections[connector] && prevRect.connections[connector].x) || getInitialConnectorPosition(connector, prevRect.x, prevRect.y, prevRect.width, prevRect.height).x) + dx,
-            y: ((prevRect.connections[connector] && prevRect.connections[connector].y) || getInitialConnectorPosition(connector, prevRect.x, prevRect.y, prevRect.width, prevRect.height).y) + dy
-          }
-        }
-      }
+      const originShape = state.data.shapes.find(r => r.id === origin.id)
+      const originConnectorPosition = getConnectorPosition(originShape, origin.connector)
+
+      const prevX = state.connecting ? state.connecting.x : originConnectorPosition.x
+      const prevY = state.connecting ? state.connecting.y : originConnectorPosition.y
+
+      const newX = prevX + dx
+      const newY = prevY + dy
 
       return {
-        data: {
-          ...state.data,
-          shapes: state.data.shapes.map(r => r.id === id
-            ? newRect
-            : r
-          ),
-          currentDropTarget: findAdjacentConnector(
-            id,
-            newRect.connections[connector].x,
-            newRect.connections[connector].y,
-            state.data.shapes
-          )
+        connecting: {
+          origin,
+          x: newX,
+          y: newY
         }
       }
     })
   }
 
-  onDropConnector (id, connector) {
-    this.setState(state => ({
-      data: {
-        ...state.data,
-        shapes: state.data.shapes.map(r => r.id === id
-          ? {
-            ...r,
-            connections: {
-              ...r.connections,
-              [connector]: {connectedTo: state.currentDropTarget}
-            }}
-          : r
-        ),
-        currentDropTarget: null
-      }
-    }))
+  onDropConnector () {
+    this.setState(state => {
+      const dropTarget = findAdjacentConnector(this.state.connecting.origin, this.state.connecting.x, this.state.connecting.y, this.state.data.shapes)
+      if (dropTarget) {
+        const newConnection = {
+          from: state.connecting.origin,
+          to: dropTarget
+        }
+        return {
+          data: {
+            ...state.data,
+            connections: [...state.data.connections, newConnection]
+          },
+          connecting: null
+        }
+      } else return {connecting: null}
+    })
   }
 
   onResize (id, position, dx, dy) {
@@ -263,7 +223,7 @@ class App extends Component {
       }
     }))
   }
-  
+
   onAddShape (shape) {
     this.setState(state => ({
       data: {
@@ -286,24 +246,31 @@ class App extends Component {
   }
 
   render () {
+    console.log(this.state.connecting)
+    const currentDropTarget = this.state.connecting
+      ? findAdjacentConnector(this.state.connecting.origin, this.state.connecting.x, this.state.connecting.y, this.state.data.shapes)
+      : null
+    console.log(currentDropTarget)
+
     return (
       <DragDropContextProvider backend={HTML5Backend}>
         <div className={this.props.classes.appFrame}>
           <AppBar className={classNames(this.props.classes.appBar, this.props.classes[`appBar-right`])}>
             <Toolbar>
-              <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
+              <IconButton className={this.props.classes.menuButton} color='inherit' aria-label='Menu'>
                 <MenuIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" className={this.props.classes.flex}>
+              <Typography variant='title' color='inherit' className={this.props.classes.flex}>
                 Kartograf
               </Typography>
-              <Button color="inherit" onClick={this.onAddShape}>Add element</Button>
             </Toolbar>
           </AppBar>
           <main className={this.props.classes.content}>
             <Canvas
               data={this.state.data}
               selected={this.state.selected}
+              currentDropTarget={currentDropTarget}
+              connecting={this.state.connecting}
               onMoveRect={this.onMoveRect}
               onMoveConnector={this.onMoveConnector}
               onDropConnector={this.onDropConnector}

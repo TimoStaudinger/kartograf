@@ -1,5 +1,5 @@
 import React from 'react'
-import RectOptions from './RectOptions';
+import RectOptions from './rect/RectOptions'
 
 const ShapeOptions = (props) => {
   if (props.shape) {

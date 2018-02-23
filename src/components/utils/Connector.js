@@ -19,41 +19,41 @@ class Connector extends React.Component {
 
   dragStop () {
     this.setState({dragging: false})
-    this.props.dropConnector(this.props.id, this.props.position)
+    this.props.dropConnector()
   }
 
   render () {
-    return (
+    const {isSelected, isConnecting, isConnectingMe, isPotentialDropTarget, isCurrentDropTarget, moveConnector, draggedX, draggedY, originX, originY} = this.props
+
+    return (isSelected || isConnectingMe || isPotentialDropTarget) && !(isConnecting && !(isConnectingMe || isPotentialDropTarget)) ? (
       <g>
-        <line
-          x1={this.props.x}
-          y1={this.props.y}
-          x2={this.props.originX}
-          y2={this.props.originY}
-          strokeWidth={1}
-          stroke='#AAA'
-        />
-        {!this.props.connectedTo ? (
-          <DraggableCore
-            onDrag={(_, d) => this.props.moveConnector(this.props.id, this.props.position, d.deltaX, d.deltaY)}
-            onStart={this.dragStart}
-            onStop={this.dragStop}
-          >
-            <circle
-              cx={this.props.x}
-              cy={this.props.y}
-              fill='#EEE'
-              stroke={this.props.currentDropTarget && this.props.currentDropTarget.id === this.props.id && this.props.currentDropTarget.position === this.props.position
-                ? 'red'
-                : '#555'
-              }
-              r={this.state.dragging ? 6 : 4}
-              strokeWidth={0.5}
-            />
-          </DraggableCore>
+        {isConnectingMe ? (
+          <line
+            x1={draggedX}
+            y1={draggedY}
+            x2={originX}
+            y2={originY}
+            strokeWidth={1}
+            stroke='#AAA'
+          />
         ) : null}
+
+        <DraggableCore
+          onDrag={(_, d) => moveConnector(d.deltaX, d.deltaY)}
+          onStart={this.dragStart}
+          onStop={this.dragStop}
+        >
+          <circle
+            cx={draggedX || originX}
+            cy={draggedY || originY}
+            fill={isCurrentDropTarget ? 'orange' : '#EEE'}
+            stroke={isCurrentDropTarget ? 'red' : '#555'}
+            r={isConnectingMe ? 6 : isPotentialDropTarget ? 8 : 4}
+            strokeWidth={0.5}
+          />
+        </DraggableCore>
       </g>
-    )
+    ) : null
   }
 }
 

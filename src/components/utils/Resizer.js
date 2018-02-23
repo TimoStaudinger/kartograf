@@ -1,7 +1,7 @@
 import React from 'react'
 import {DraggableCore} from 'react-draggable'
 
-const Resizer = ({id, position, x, y, onResize}) =>
+const Resizer = ({id, position, x, y, onResize, isSelected, isConnecting}) => isSelected && !isConnecting ? (
   <DraggableCore
     onDrag={(_, d) => onResize(id, position, d.deltaX, d.deltaY)}
   >
@@ -17,5 +17,6 @@ const Resizer = ({id, position, x, y, onResize}) =>
       strokeWidth={0.5}
     />
   </DraggableCore>
+) : null
 
 export default Resizer

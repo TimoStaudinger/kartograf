@@ -1,8 +1,8 @@
 import React from 'react'
-import Drawer from 'material-ui/Drawer';
-import { withStyles } from 'material-ui/styles';
-import ShapeOptions from './shapes/ShapeOptions'
-import Divider from 'material-ui/Divider';
+import Drawer from 'material-ui/Drawer'
+import { withStyles } from 'material-ui/styles'
+import ShapeOptions from '../shapes/ShapeOptions'
+import Divider from 'material-ui/Divider'
 import ShapePalette from './ShapePalette'
 
 const sidebarWidth = 400
@@ -14,10 +14,10 @@ const styles = theme => ({
     height: 430,
     marginTop: theme.spacing.unit * 3,
     zIndex: 1,
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   flex: {
-    flex: 1,
+    flex: 1
   },
   divider: {
     marginTop: 20,
@@ -25,7 +25,7 @@ const styles = theme => ({
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20,
+    marginRight: 20
   },
   appFrame: {
     position: 'absolute',
@@ -44,7 +44,7 @@ const styles = theme => ({
     position: 'relative',
     height: 'calc(100% - 64px)',
     marginTop: 64,
-    width: sidebarWidth,
+    width: sidebarWidth
   },
   drawerHeader: theme.mixins.toolbar,
   content: {
@@ -53,16 +53,16 @@ const styles = theme => ({
     height: 'calc(100% - 64px)',
     marginTop: 56,
     [theme.breakpoints.up('sm')]: {
-      marginTop: 64,
-    },
+      marginTop: 64
+    }
   }
 })
 
 const Sidebar = ({classes, shapes, selected, onChangeShape}) =>
   <Drawer
-    variant="permanent"
+    variant='permanent'
     classes={{
-      paper: classes.drawerPaper,
+      paper: classes.drawerPaper
     }}
     anchor='right'
   >
