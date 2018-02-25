@@ -4,6 +4,7 @@ import FilterDropShadow from './utils/FilterDropShadow'
 import Shape, {getConnectorPosition} from '../shapes/Shape'
 import Connection from './Connection'
 import {DropTarget} from 'react-dnd'
+import {DraggableCore} from 'react-draggable'
 import colors from '../colors'
 
 const snapTo = (grid, value) => {
@@ -51,7 +52,59 @@ const shapeDropTarget = {
 }
 
 class Canvas extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.onDraw = this.onDraw.bind(this)
+    this.onStartDrawing = this.onStartDrawing.bind(this)
+    this.onStopDrawing = this.onStopDrawing.bind(this)
+
+    this.state = {
+      drawing: null
+    }
+  }
+
+  onStartDrawing (x, y) {
+    this.setState({
+      drawing: {
+        from: {x, y},
+        to: {x, y}
+      }
+    })
+  }
+
+  onDraw (dx, dy) {
+    this.setState(state => ({
+      drawing: {
+        ...state.drawing,
+        to: {
+          x: state.drawing.to.x + dx,
+          y: state.drawing.to.y + dy,
+        }
+      }
+    }))
+  }
+
+  onStopDrawing () {
+    this.props.onAddShape(
+      this.state.drawing.from.x < this.state.drawing.to.x ? this.state.drawing.from.x : this.state.drawing.to.x,
+      this.state.drawing.from.y < this.state.drawing.to.y ? this.state.drawing.from.y : this.state.drawing.to.y,
+      Math.abs(this.state.drawing.to.x - this.state.drawing.from.x),
+      Math.abs(this.state.drawing.to.y - this.state.drawing.from.y)
+    )
+    this.setState({
+      drawing: null
+    })
+  }
+
   render () {
+    const drawingShadow = this.state.drawing ? snapRectToGrid({
+      x: this.state.drawing.from.x < this.state.drawing.to.x ? this.state.drawing.from.x : this.state.drawing.to.x,
+      y: this.state.drawing.from.y < this.state.drawing.to.y ? this.state.drawing.from.y : this.state.drawing.to.y,
+      width: Math.abs(this.state.drawing.to.x - this.state.drawing.from.x),
+      height: Math.abs(this.state.drawing.to.y - this.state.drawing.from.y)
+    }) : null
+
     return this.props.connectDropTarget(
       <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden'}}>
         <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
@@ -62,13 +115,21 @@ class Canvas extends React.Component {
             <style type='text/css'>@import url(http://fonts.googleapis.com/css?family=Roboto);</style>
           </defs>
           <FilterDropShadow id='dropshadow' />
+
           <rect x={0} y={0} width='100%' height='100%' fill='#ddd' onClick={this.props.onClearSelection} />
-          <rect x={0} y={0} width='100%' height='100%' fill='url(#grid)' onClick={this.props.onClearSelection} />
+          <DraggableCore
+            onStart={(_, d) => this.onStartDrawing(d.lastX, d.lastY)}
+            onStop={(_, d) => this.onStopDrawing()}
+            onDrag={(_, d) => this.onDraw(d.deltaX, d.deltaY)}
+          >
+            <rect x={0} y={0} width='100%' height='100%' fill='url(#grid)' onClick={this.props.onClearSelection} />
+          </DraggableCore>
 
           {this.props.data.shapes.map(r =>
             <Shape
               {...snapRectToGrid(r)}
               color={colors[r.color]}
+              key={r.id}
               id={r.id}
               filter='dropshadow'
               moveRect={this.props.onMoveRect}
@@ -83,6 +144,17 @@ class Canvas extends React.Component {
               connecting={this.props.connecting && this.props.connecting.origin.id === r.id ? this.props.connecting : null}
             />
           )}
+
+          {this.state.drawing ? (
+            <rect
+              {...drawingShadow}
+              rx={2}
+              ry={2}
+              fill='none'
+              stroke='#999'
+              strokeWidth='3'
+            />
+          ) : null}
 
           {this.props.data.connections.map(c => resolveConnection(c, this.props.data.shapes)).map(c =>
             <Connection {...c} />

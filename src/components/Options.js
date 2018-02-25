@@ -10,7 +10,7 @@ const styles = theme => ({
     right: 50,
     zIndex: 1000,
     width: 300,
-    backgroundColor: '#E1E2E1'
+    backgroundColor: '#FFF'
   }
 })
 

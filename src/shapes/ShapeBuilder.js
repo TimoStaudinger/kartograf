@@ -1,17 +1,18 @@
 import uuid from 'uuid/v4'
 
-const createRect = ({x, y, type}) => ({
+const createRect = (x, y, width, height) => ({
   id: uuid(),
-  x: x - 100,
-  y: y - 50,
-  width: 200,
-  height: 100,
+  type: 'rect',
+  x,
+  y,
+  width,
+  height,
   color: 0
 })
 
 class ShapeBuilder {
-  static create (shape) {
-    return createRect(shape)
+  static create (x, y, width, height, type = 'rect') {
+    return createRect(x, y, width, height)
   }
 }
 

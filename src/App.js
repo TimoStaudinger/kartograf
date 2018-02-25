@@ -241,11 +241,11 @@ class App extends Component {
     }))
   }
 
-  onAddShape (shape) {
+  onAddShape (x, y, width, height) {
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: [...state.data.shapes, ShapeBuilder.create(shape)]
+        shapes: [...state.data.shapes, ShapeBuilder.create(x, y, width, height)]
       }
     }))
   }
@@ -263,11 +263,9 @@ class App extends Component {
   }
 
   render () {
-    console.log(this.state.connecting)
     const currentDropTarget = this.state.connecting
       ? findAdjacentConnector(this.state.connecting.origin, this.state.connecting.x, this.state.connecting.y, this.state.data.shapes)
       : null
-    console.log(currentDropTarget)
 
     return (
       <MuiThemeProvider theme={theme}>
