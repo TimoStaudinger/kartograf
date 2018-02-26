@@ -12,11 +12,11 @@ import { withStyles } from 'material-ui/styles'
 import classNames from 'classnames'
 import {DragDropContextProvider} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
-import Canvas from './components/Canvas'
+import Canvas from './components/canvas/Canvas'
+import Toolbox from './components/Toolbox'
 import Options from './components/Options'
-import ShapeBuilder from './shapes/ShapeBuilder'
-import {getConnectorPosition} from './shapes/Shape'
-import { getConnectors } from './shapes/rect/Rect'
+import ShapeBuilder from './components/shapes/ShapeBuilder'
+import {getConnectorPosition, getConnectors} from './components/shapes/Shape'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import theme from './components/Theme'
 
@@ -48,8 +48,7 @@ const styles = theme => ({
   },
   appBar: {
     position: 'absolute',
-    width: '100%',
-    zIndex: 1500
+    width: '100%'
   },
   drawerPaper: {
     position: 'relative',
@@ -115,12 +114,13 @@ class App extends Component {
 
     this.onDropConnector = this.onDropConnector.bind(this)
     this.onMoveConnector = this.onMoveConnector.bind(this)
-    this.onMoveRect = this.onMoveRect.bind(this)
+    this.onMoveShape = this.onMoveShape.bind(this)
     this.onResize = this.onResize.bind(this)
     this.onAddShape = this.onAddShape.bind(this)
     this.onSelect = this.onSelect.bind(this)
     this.onClearSelection = this.onClearSelection.bind(this)
     this.onChangeShape = this.onChangeShape.bind(this)
+    this.onChangeMode = this.onChangeMode.bind(this)
 
     this.state = {
       data: {
@@ -128,7 +128,8 @@ class App extends Component {
         connections: []
       },
       connecting: null,
-      selected: []
+      selected: [],
+      mode: 'pan'
     }
   }
 
@@ -140,7 +141,7 @@ class App extends Component {
     this.setState({selected: []})
   }
 
-  onMoveRect (id, dx, dy) {
+  onMoveShape (id, dx, dy) {
     this.setState(state => ({
       data: {
         ...state.data,
@@ -241,11 +242,13 @@ class App extends Component {
     }))
   }
 
-  onAddShape (x, y, width, height) {
+  onAddShape ({x, y, width, height}) {
+    const type = this.state.mode === 'drawIcon' ? 'icon' : 'rect'
+
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: [...state.data.shapes, ShapeBuilder.create(x, y, width, height)]
+        shapes: [...state.data.shapes, ShapeBuilder.create(x, y, width, height, type)]
       }
     }))
   }
@@ -260,6 +263,10 @@ class App extends Component {
         )
       }
     }))
+  }
+
+  onChangeMode (mode) {
+    this.setState({mode})
   }
 
   render () {
@@ -291,24 +298,29 @@ class App extends Component {
               </Toolbar>
             </AppBar>
             <main className={this.props.classes.content}>
-              {/* <Palette /> */}
               <Options
                 shapes={this.state.data.shapes}
                 selected={this.state.selected}
                 onChangeShape={this.onChangeShape}
+              />
+              <Toolbox
+                mode={this.state.mode}
+                onChangeMode={this.onChangeMode}
               />
               <Canvas
                 data={this.state.data}
                 selected={this.state.selected}
                 currentDropTarget={currentDropTarget}
                 connecting={this.state.connecting}
-                onMoveRect={this.onMoveRect}
+                onMoveShape={this.onMoveShape}
                 onMoveConnector={this.onMoveConnector}
                 onDropConnector={this.onDropConnector}
                 onResize={this.onResize}
                 onSelect={this.onSelect}
                 onClearSelection={this.onClearSelection}
                 onAddShape={this.onAddShape}
+                isDrawable={this.state.mode && this.state.mode.startsWith('draw')}
+                isDrawableSquare={this.state.mode === 'drawIcon'}
               />
             </main>
             <Button onClick={() => this.onAddShape({x: 300, y: 300, type: 'rect'})} variant='fab' className={this.props.classes.fab} color='secondary'>

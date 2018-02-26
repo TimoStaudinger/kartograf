@@ -1,7 +1,7 @@
 import React from 'react'
 import Paper from 'material-ui/Paper'
 import { withStyles } from 'material-ui/styles'
-import ShapeOptions from '../shapes/ShapeOptions'
+import ShapeOptions from './shapes/ShapeOptions'
 
 const styles = theme => ({
   paper: {

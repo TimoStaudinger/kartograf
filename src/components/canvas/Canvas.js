@@ -1,11 +1,11 @@
 import './Canvas.css'
 import React from 'react'
-import FilterDropShadow from './utils/FilterDropShadow'
+import FilterDropShadow from '../utils/FilterDropShadow'
+import Grid from './Grid'
 import Shape, {getConnectorPosition} from '../shapes/Shape'
-import Connection from './Connection'
+import Connection from '../Connection'
 import {DropTarget} from 'react-dnd'
-import {DraggableCore} from 'react-draggable'
-import colors from '../colors'
+import colors from '../../colors'
 
 const snapTo = (grid, value) => {
   const rem = value % grid
@@ -51,6 +51,23 @@ const shapeDropTarget = {
   }
 }
 
+const calculateDrawingShadow = ({from, to}, isDrawingSquare) => {
+  const x = from.x < to.x ? from.x : to.x
+  const y = from.y < to.y ? from.y : to.y
+
+  const width = Math.abs(to.x - from.x)
+  const height = Math.abs(to.y - from.y)
+
+  const squareEdgeLength = width > height ? width : height
+
+  return snapRectToGrid({
+    x,
+    y,
+    width: isDrawingSquare ? squareEdgeLength : width,
+    height: isDrawingSquare ? squareEdgeLength : height
+  })
+}
+
 class Canvas extends React.Component {
   constructor (props) {
     super(props)
@@ -65,45 +82,42 @@ class Canvas extends React.Component {
   }
 
   onStartDrawing (x, y) {
-    this.setState({
-      drawing: {
-        from: {x, y},
-        to: {x, y}
-      }
-    })
+    if (this.props.isDrawable) {
+      this.setState({
+        drawing: {
+          from: {x, y},
+          to: {x, y}
+        }
+      })
+    }
   }
 
   onDraw (dx, dy) {
-    this.setState(state => ({
-      drawing: {
-        ...state.drawing,
-        to: {
-          x: state.drawing.to.x + dx,
-          y: state.drawing.to.y + dy,
+    if (this.props.isDrawable) {
+      this.setState(state => ({
+        drawing: {
+          ...state.drawing,
+          to: {
+            x: state.drawing.to.x + dx,
+            y: state.drawing.to.y + dy,
+          }
         }
-      }
-    }))
+      }))
+    }
   }
 
   onStopDrawing () {
-    this.props.onAddShape(
-      this.state.drawing.from.x < this.state.drawing.to.x ? this.state.drawing.from.x : this.state.drawing.to.x,
-      this.state.drawing.from.y < this.state.drawing.to.y ? this.state.drawing.from.y : this.state.drawing.to.y,
-      Math.abs(this.state.drawing.to.x - this.state.drawing.from.x),
-      Math.abs(this.state.drawing.to.y - this.state.drawing.from.y)
-    )
-    this.setState({
-      drawing: null
-    })
+    if (this.props.isDrawable) {
+      this.props.onAddShape(calculateDrawingShadow(this.state.drawing, this.props.isDrawableSquare))
+    }
+    this.setState({drawing: null})
   }
 
   render () {
-    const drawingShadow = this.state.drawing ? snapRectToGrid({
-      x: this.state.drawing.from.x < this.state.drawing.to.x ? this.state.drawing.from.x : this.state.drawing.to.x,
-      y: this.state.drawing.from.y < this.state.drawing.to.y ? this.state.drawing.from.y : this.state.drawing.to.y,
-      width: Math.abs(this.state.drawing.to.x - this.state.drawing.from.x),
-      height: Math.abs(this.state.drawing.to.y - this.state.drawing.from.y)
-    }) : null
+    const drawingShadow = this.state.drawing ? calculateDrawingShadow(
+      this.state.drawing,
+      this.props.isDrawableSquare
+    ) : null
 
     return this.props.connectDropTarget(
       <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden'}}>
@@ -116,14 +130,12 @@ class Canvas extends React.Component {
           </defs>
           <FilterDropShadow id='dropshadow' />
 
-          <rect x={0} y={0} width='100%' height='100%' fill='#ddd' onClick={this.props.onClearSelection} />
-          <DraggableCore
-            onStart={(_, d) => this.onStartDrawing(d.lastX, d.lastY)}
-            onStop={(_, d) => this.onStopDrawing()}
-            onDrag={(_, d) => this.onDraw(d.deltaX, d.deltaY)}
-          >
-            <rect x={0} y={0} width='100%' height='100%' fill='url(#grid)' onClick={this.props.onClearSelection} />
-          </DraggableCore>
+          <Grid
+            onClearSelection={this.props.onClearSelection}
+            onStartDrawing={this.onStartDrawing}
+            onStopDrawing={this.onStopDrawing}
+            onDraw={this.onDraw}
+          />
 
           {this.props.data.shapes.map(r =>
             <Shape
@@ -132,7 +144,7 @@ class Canvas extends React.Component {
               key={r.id}
               id={r.id}
               filter='dropshadow'
-              moveRect={this.props.onMoveRect}
+              onMoveShape={this.props.onMoveShape}
               moveConnector={this.props.onMoveConnector}
               dropConnector={this.props.onDropConnector}
               onResize={this.props.onResize}

@@ -5,7 +5,7 @@ import {withStyles} from 'material-ui/styles'
 import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
-import colors from '../../colors'
+import colors from '../../../colors'
 
 const styles = theme => ({
   formControl: {
@@ -17,7 +17,7 @@ const styles = theme => ({
     width: '100%'
   },
   header: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 2,
     color: '#616161'
   },
   colorPickerPaper: {

@@ -1,33 +1,33 @@
 import React from 'react'
 import {DraggableCore} from 'react-draggable'
-import Connector from '../../components/utils/Connector'
-import Resizer from '../../components/utils/Resizer'
+import Connector from '../../utils/Connector'
+import Resizer from '../../utils/Resizer'
 
 const connectors = ['top', 'bottom', 'left', 'right']
 export const getConnectors = () => connectors
 
-export const getConnectorPosition = ({x, y, width, height}, connector) => {
+export const getConnectorPosition = ({x, y, width}, connector) => {
   switch (connector) {
     case 'top':
       return {x: x + width / 2, y}
 
     case 'bottom':
-      return {x: x + width / 2, y: y + height}
+      return {x: x + width / 2, y: y + width}
 
     case 'left':
-      return {x, y: y + height / 2}
+      return {x, y: y + width / 2}
 
     case 'right':
-      return {x: x + width, y: y + height / 2}
+      return {x: x + width, y: y + width / 2}
 
     default:
       return {x, y}
   }
 }
 
-const Rect = ({id, x, y, label, height, width, color, filter, connections, moveRect, moveConnector, dropConnector, onResize, currentDropTarget, onSelect, isSelected, isConnecting, isConnectingMe, connecting}) =>
+const Icon = ({id, x, y, label, width, color, filter, onMoveShape, moveConnector, dropConnector, onResize, currentDropTarget, onSelect, isSelected, isConnecting, isConnectingMe, connecting}) =>
   <g>
-    <DraggableCore onDrag={(_, d) => moveRect(id, d.deltaX, d.deltaY)}>
+    <DraggableCore onDrag={(_, d) => onMoveShape(id, d.deltaX, d.deltaY)}>
       <g onClick={() => onSelect(id)}>
         <rect
           id={id}
@@ -35,15 +35,15 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
           y={y}
           rx={2}
           ry={2}
-          height={height}
+          height={width}
           width={width}
           fill={color.primary}
           style={{filter: `url(#${filter})`}}
         />
         <text
           x={x + width / 2}
-          y={y + height / 2}
-          fontSize={Math.min(20, height - 10)}
+          y={y + width / 2}
+          fontSize={Math.min(20, width - 10)}
           fontFamily='Roboto'
           fill={color.text}
           textAnchor='middle'
@@ -77,7 +77,7 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
       id={id}
       position='bottomLeft'
       x={x}
-      y={y + height}
+      y={y + width}
       onResize={onResize}
       isSelected={isSelected}
       isConnecting={isConnecting}
@@ -86,7 +86,7 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
       id={id}
       position='bottomRight'
       x={x + width}
-      y={y + height}
+      y={y + width}
       onResize={onResize}
       isSelected={isSelected}
       isConnecting={isConnecting}
@@ -96,7 +96,7 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
       draggedX={isConnectingMe && connecting.origin.connector === 'right' ? connecting.x : null}
       draggedY={isConnectingMe && connecting.origin.connector === 'right' ? connecting.y : null}
       originX={x + width}
-      originY={y + (height / 2)}
+      originY={y + (width / 2)}
       moveConnector={(dx, dy) => moveConnector({id, connector: 'right'}, dx, dy)}
       dropConnector={dropConnector}
       isCurrentDropTarget={currentDropTarget === 'right'}
@@ -110,7 +110,7 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
       draggedX={isConnectingMe && connecting.origin.connector === 'left' ? connecting.x : null}
       draggedY={isConnectingMe && connecting.origin.connector === 'left' ? connecting.y : null}
       originX={x}
-      originY={y + (height / 2)}
+      originY={y + (width / 2)}
       moveConnector={(dx, dy) => moveConnector({id, connector: 'left'}, dx, dy)}
       dropConnector={dropConnector}
       isCurrentDropTarget={currentDropTarget === 'left'}
@@ -138,7 +138,7 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
       draggedX={isConnectingMe && connecting.origin.connector === 'bottom' ? connecting.x : null}
       draggedY={isConnectingMe && connecting.origin.connector === 'bottom' ? connecting.y : null}
       originX={x + (width / 2)}
-      originY={y + height}
+      originY={y + width}
       moveConnector={(dx, dy) => moveConnector({id, connector: 'bottom'}, dx, dy)}
       dropConnector={dropConnector}
       isCurrentDropTarget={currentDropTarget === 'bottom'}
@@ -149,4 +149,4 @@ const Rect = ({id, x, y, label, height, width, color, filter, connections, moveR
     />
   </g>
 
-export default Rect
+export default Icon
