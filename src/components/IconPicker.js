@@ -12,6 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
+import Tooltip from 'material-ui/Tooltip';
 import {allIcons} from './IconLibrary'
 
 const styles = {
@@ -58,9 +59,11 @@ const IconPicker = ({onPick, onClose, isOpen, classes}) =>
       </Toolbar>
     </AppBar>
     <Grid className={classes.grid} container spacing={8}>
-      {allIcons.map(icon =>
-        <Grid className={classes.colorPickerGridItem} item xs={2} className={classes.iconContainer}>
-          <Button><icon.component className={classes.icon} fontSize /></Button>
+      {allIcons.slice(0, 200).map(icon =>
+        <Grid key={icon.name} className={classes.colorPickerGridItem} item xs={2} className={classes.iconContainer}>
+          <Tooltip title={icon.name}>
+            <Button><icon.component className={classes.icon} fontSize /></Button>
+          </Tooltip>
         </Grid>
       )}
     </Grid>

@@ -20,7 +20,8 @@ const styles = theme => ({
     width: '100%'
   },
   pickIconButton: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 2,
+    width: 'calc(100% - 32px)'
   },
   header: {
     margin: theme.spacing.unit * 2,

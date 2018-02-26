@@ -323,14 +323,6 @@ class App extends Component {
                 isDrawableSquare={this.state.mode === 'drawIcon'}
               />
             </main>
-            <Button onClick={() => this.onAddShape({x: 300, y: 300, type: 'rect'})} variant='fab' className={this.props.classes.fab} color='secondary'>
-              <BrushIcon />
-            </Button>
-            {/* <Sidebar
-              shapes={this.state.data.shapes}
-              selected={this.state.selected}
-              onChangeShape={this.onChangeShape}
-            /> */}
           </div>
         </DragDropContextProvider>
       </MuiThemeProvider>

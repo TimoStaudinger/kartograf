@@ -2,6 +2,7 @@ import React from 'react'
 import {DraggableCore} from 'react-draggable'
 import Connector from '../../utils/Connector'
 import Resizer from '../../utils/Resizer'
+import {indexedIcons} from '../../IconLibrary'
 
 const connectors = ['top', 'bottom', 'left', 'right']
 export const getConnectors = () => connectors
@@ -25,21 +26,20 @@ export const getConnectorPosition = ({x, y, width}, connector) => {
   }
 }
 
-const Icon = ({id, x, y, label, width, color, filter, onMoveShape, moveConnector, dropConnector, onResize, currentDropTarget, onSelect, isSelected, isConnecting, isConnectingMe, connecting}) =>
-  <g>
+const Icon = ({id, x, y, icon, label, width, color, filter, onMoveShape, moveConnector, dropConnector, onResize, currentDropTarget, onSelect, isSelected, isConnecting, isConnectingMe, connecting}) => {
+  const IconComponent = indexedIcons[icon]
+
+  return <g>
     <DraggableCore onDrag={(_, d) => onMoveShape(id, d.deltaX, d.deltaY)}>
       <g onClick={() => onSelect(id)}>
-        <rect
-          id={id}
+        <IconComponent
           x={x}
           y={y}
-          rx={2}
-          ry={2}
-          height={width}
           width={width}
-          fill={color.primary}
-          style={{filter: `url(#${filter})`}}
+          height={width}
+          nativeColor={color.primary}
         />
+
         <text
           x={x + width / 2}
           y={y + width / 2}
@@ -148,5 +148,5 @@ const Icon = ({id, x, y, label, width, color, filter, onMoveShape, moveConnector
       isConnectingMe={isConnectingMe && connecting.origin.connector === 'bottom'}
     />
   </g>
-
+}
 export default Icon
