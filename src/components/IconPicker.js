@@ -24,7 +24,8 @@ const styles = {
   },
   icon: {
     color: 'rgb(117, 117, 117)',
-    fontSize: 36
+    fontSize: 52,
+    margin: 20
   },
   iconContainer: {
     textAlign: 'center'
@@ -41,32 +42,45 @@ function Transition(props) {
   return <Slide direction="up" {...props} />
 }
 
-const IconPicker = ({onPick, onClose, isOpen, classes}) =>
-  <Dialog
-    fullScreen
-    open={isOpen}
-    onClose={onClose}
-    transition={Transition}
-  >
-    <AppBar className={classes.appBar}>
-      <Toolbar>
-        <IconButton color="inherit" onClick={onClose} aria-label="Close">
-          <CloseIcon />
-        </IconButton>
-        <Typography variant="title" color="inherit" className={classes.flex}>
-          Select an icon
-        </Typography>
-      </Toolbar>
-    </AppBar>
-    <Grid className={classes.grid} container spacing={8}>
-      {allIcons.slice(0, 200).map(icon =>
-        <Grid key={icon.name} className={classes.colorPickerGridItem} item xs={2} className={classes.iconContainer}>
-          <Tooltip title={icon.name}>
-            <Button><icon.component className={classes.icon} fontSize /></Button>
-          </Tooltip>
-        </Grid>
-      )}
-    </Grid>
-  </Dialog>
+class IconPicker extends React.Component{
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      rows: 12
+    }
+  }
+
+  render () {
+    const {onClose, classes, isOpen, onPick} = this.props
+
+    return <Dialog
+      fullScreen
+      open={isOpen}
+      onClose={onClose}
+      transition={Transition}
+    >
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton color="inherit" onClick={onClose} aria-label="Close">
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="title" color="inherit" className={classes.flex}>
+            Select an icon
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Grid className={classes.grid} container spacing={8}>
+        {allIcons.slice(0, this.state.rows * 6).map(icon =>
+          <Grid key={icon.name} className={classes.colorPickerGridItem} item xs={2} className={classes.iconContainer}>
+            <Tooltip title={icon.name}>
+              <Button><icon.component className={classes.icon} fontSize /></Button>
+            </Tooltip>
+          </Grid>
+        )}
+      </Grid>
+    </Dialog>
+  }
+}
 
 export default withStyles(styles)(IconPicker)
