@@ -1,6 +1,4 @@
 import React from 'react'
-import {FormControl} from 'material-ui/Form'
-import Input, {InputLabel} from 'material-ui/Input'
 import {withStyles} from 'material-ui/styles'
 import Button from 'material-ui/Button';
 

@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Button from 'material-ui/Button'
-import BrushIcon from 'material-ui-icons/Brush'
 import ShareIcon from 'material-ui-icons/Share'
 import FileDownloadIcon from 'material-ui-icons/FileDownload'
 import MenuIcon from 'material-ui-icons/Menu'
@@ -8,7 +7,7 @@ import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
 import IconButton from 'material-ui/IconButton'
-import { withStyles } from 'material-ui/styles'
+import {withStyles} from 'material-ui/styles'
 import classNames from 'classnames'
 import {DragDropContextProvider} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -102,6 +101,8 @@ const findAdjacentConnector = (origin, x, y, shapes, threshold = 20) => {
         }
         return true
       }
+
+      return false
     })
   })
 
@@ -109,7 +110,7 @@ const findAdjacentConnector = (origin, x, y, shapes, threshold = 20) => {
 }
 
 class App extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.onDropConnector = this.onDropConnector.bind(this)
@@ -133,33 +134,39 @@ class App extends Component {
     }
   }
 
-  onSelect (id) {
+  onSelect(id) {
     this.setState({selected: [id]})
   }
 
-  onClearSelection () {
+  onClearSelection() {
     this.setState({selected: []})
   }
 
-  onMoveShape (id, dx, dy) {
+  onMoveShape(id, dx, dy) {
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: state.data.shapes.map(r => r.id === id
-          ? {...r, x: r.x + dx, y: r.y + dy}
-          : r
+        shapes: state.data.shapes.map(
+          r => (r.id === id ? {...r, x: r.x + dx, y: r.y + dy} : r)
         )
       }
     }))
   }
 
-  onMoveConnector (origin, dx, dy) {
+  onMoveConnector(origin, dx, dy) {
     this.setState(state => {
       const originShape = state.data.shapes.find(r => r.id === origin.id)
-      const originConnectorPosition = getConnectorPosition(originShape, origin.connector)
+      const originConnectorPosition = getConnectorPosition(
+        originShape,
+        origin.connector
+      )
 
-      const prevX = state.connecting ? state.connecting.x : originConnectorPosition.x
-      const prevY = state.connecting ? state.connecting.y : originConnectorPosition.y
+      const prevX = state.connecting
+        ? state.connecting.x
+        : originConnectorPosition.x
+      const prevY = state.connecting
+        ? state.connecting.y
+        : originConnectorPosition.y
 
       const newX = prevX + dx
       const newY = prevY + dy
@@ -174,9 +181,14 @@ class App extends Component {
     })
   }
 
-  onDropConnector () {
+  onDropConnector() {
     this.setState(state => {
-      const dropTarget = findAdjacentConnector(this.state.connecting.origin, this.state.connecting.x, this.state.connecting.y, this.state.data.shapes)
+      const dropTarget = findAdjacentConnector(
+        this.state.connecting.origin,
+        this.state.connecting.x,
+        this.state.connecting.y,
+        this.state.data.shapes
+      )
       if (dropTarget) {
         const newConnection = {
           from: state.connecting.origin,
@@ -193,7 +205,7 @@ class App extends Component {
     })
   }
 
-  onResize (id, position, dx, dy) {
+  onResize(id, position, dx, dy) {
     let newRect = this.state.data.shapes.find(r => r.id === id)
 
     switch (position) {
@@ -226,6 +238,7 @@ class App extends Component {
         break
 
       case 'bottomRight':
+      default:
         newRect = {
           ...newRect,
           width: newRect.width + dx,
@@ -237,64 +250,82 @@ class App extends Component {
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: state.data.shapes.map(r => r.id === id ? newRect : r)
+        shapes: state.data.shapes.map(r => (r.id === id ? newRect : r))
       }
     }))
   }
 
-  onAddShape ({x, y, width, height}) {
+  onAddShape({x, y, width, height}) {
     const type = this.state.mode === 'drawIcon' ? 'icon' : 'rect'
 
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: [...state.data.shapes, ShapeBuilder.create(x, y, width, height, type)]
+        shapes: [
+          ...state.data.shapes,
+          ShapeBuilder.create(x, y, width, height, type)
+        ]
       }
     }))
   }
 
-  onChangeShape (newShape) {
+  onChangeShape(newShape) {
     this.setState(state => ({
       data: {
         ...state.data,
-        shapes: state.data.shapes.map(shape => shape.id === newShape.id
-          ? newShape
-          : shape
+        shapes: state.data.shapes.map(
+          shape => (shape.id === newShape.id ? newShape : shape)
         )
       }
     }))
   }
 
-  onChangeMode (mode) {
+  onChangeMode(mode) {
     this.setState({mode})
   }
 
-  render () {
+  render() {
     const currentDropTarget = this.state.connecting
-      ? findAdjacentConnector(this.state.connecting.origin, this.state.connecting.x, this.state.connecting.y, this.state.data.shapes)
+      ? findAdjacentConnector(
+          this.state.connecting.origin,
+          this.state.connecting.x,
+          this.state.connecting.y,
+          this.state.data.shapes
+        )
       : null
 
     return (
       <MuiThemeProvider theme={theme}>
         <DragDropContextProvider backend={HTML5Backend}>
           <div className={this.props.classes.appFrame}>
-            <AppBar className={classNames(this.props.classes.appBar, this.props.classes[`appBar-right`])}>
+            <AppBar
+              className={classNames(
+                this.props.classes.appBar,
+                this.props.classes[`appBar-right`]
+              )}
+            >
               <Toolbar>
-                <IconButton className={this.props.classes.menuButton} color='inherit' aria-label='Menu'>
+                <IconButton
+                  className={this.props.classes.menuButton}
+                  color="inherit"
+                  aria-label="Menu"
+                >
                   <MenuIcon />
                 </IconButton>
-                <Typography variant='title' color='inherit' className={this.props.classes.flex}>
+                <Typography
+                  variant="title"
+                  color="inherit"
+                  className={this.props.classes.flex}
+                >
                   Kartograf
                 </Typography>
-                <Button color='inherit'>
+                <Button color="inherit">
                   <ShareIcon />
                 </Button>
-                <Button color='inherit'>
+                <Button color="inherit">
                   <FileDownloadIcon />
                 </Button>
-                <Button color='inherit'>
-                  Sign in
-                </Button>
+                <Button color="inherit">Sign in</Button>
               </Toolbar>
             </AppBar>
             <main className={this.props.classes.content}>
@@ -319,7 +350,9 @@ class App extends Component {
                 onSelect={this.onSelect}
                 onClearSelection={this.onClearSelection}
                 onAddShape={this.onAddShape}
-                isDrawable={this.state.mode && this.state.mode.startsWith('draw')}
+                isDrawable={
+                  this.state.mode && this.state.mode.startsWith('draw')
+                }
                 isDrawableSquare={this.state.mode === 'drawIcon'}
               />
             </main>

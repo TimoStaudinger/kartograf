@@ -6,7 +6,6 @@ import Shape, {getConnectorPosition} from '../shapes/Shape'
 import Connection from '../Connection'
 import {DropTarget} from 'react-dnd'
 import colors from '../../colors'
-import AccountIcon from 'mdi-material-ui/Account'
 
 const snapTo = (grid, value) => {
   const rem = value % grid
