@@ -7,4 +7,6 @@ before_install:
 
 cache: yarn
 
-script: build
+script:
+  - test
+  - build

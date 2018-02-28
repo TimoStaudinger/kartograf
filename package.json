@@ -2,5 +2,12 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "test": "wsrun test",
+    "build": "wsrun build"
+  },
+  "devDependencies": {
+    "wsrun": "^1.7.0"
+  }
 }
