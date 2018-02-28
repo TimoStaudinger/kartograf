@@ -31,7 +31,8 @@ const styles = theme => ({
     overflow: 'hidden'
   },
   flex: {
-    flex: 1
+    flex: 1,
+    fontFamily: 'Raleway, Roboto, sans-serif'
   },
   menuButton: {
     marginLeft: -12,
