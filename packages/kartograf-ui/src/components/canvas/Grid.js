@@ -7,7 +7,7 @@ const Grid = ({onClearSelection, onStartDrawing, onDraw, onStopDrawing}) => [
     y={0}
     width="100%"
     height="100%"
-    fill="#ddd"
+    fill="#efefef"
     onClick={onClearSelection}
     key="background"
   />,
