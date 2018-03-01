@@ -126,7 +126,7 @@ class Canvas extends React.Component {
             <pattern id='grid' width='20' height='20' patternUnits='userSpaceOnUse'>
               <path d='M 20 0 L 0 0 0 20' fill='none' stroke='#aaa' strokeWidth='0.5' />
             </pattern>
-            <style type='text/css'>@import url(http://fonts.googleapis.com/css?family=Roboto);</style>
+            <style type='text/css'>@import url(https://fonts.googleapis.com/css?family=Roboto);</style>
           </defs>
           <FilterDropShadow id='dropshadow' />
 
