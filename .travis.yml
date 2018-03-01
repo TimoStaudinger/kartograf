@@ -18,7 +18,6 @@ deploy:
     local_dir: build
     on:
       branch: stable
-
   - provider: s3
     access_key_id:
       secure: "SM5uYup2CVi6sdNEleXi5TD4j+2Cw5T/dRo0HpIk36PijzAiEJH5oA2vJGwRTrXXmMLVAYWULEz2COXcY6A2Eka5/THeuvnVgpPxOK4ktgaOFUlyy2dpItSjn6G3ld3gE90dHUm/FYfX9PIVv0NeVnlWvj5PxzPfQ+DsXsEQ+CSNbRDOeC2QToIXgqx+aDNymIe6NcWC3LQR+kdh3I7an/07SrmZOhZCWZVYk63iChvv/ACSDy3StgaJZUefy0eUYfk4BKcZefAd9A0++pOTXFeriHv3z8t3GuWMqtwMPPYi5Ism71ipZxMLoGH8vdyAQPRvTQaSsF/srbBqeUpbpgvei0kE3co68hyI7KCmd95otfQJvUnQavTW9nRGsZEWqyQvTG24DCJJD2Pfj/jp2kfqdhjXmepAoCIN1btnIJ+OZFrGc0mQhhg3NiiRU070cwFzPKav799NAv6rR5CVzQFclhuK541fDMUWS4RDNRmqorfA1l5xJCdUNKWIMZlut+W3ehkRUacdlAG9M2b1lairvGqtg7OFOq8e1By68DMNKnoNLr07fCbO+b4WaT7cS185cSW8pURtSqXzxOiCKWKuGzzactsxuryN1QGr88hCuQ58U/tvZkgTAofFlvBPTsel+c9bWolq4Hjtl3j6xHk2fX7d9vrpzEV5d7RglqA="
