@@ -6,7 +6,7 @@
   "scripts": {
     "test": "wsrun test",
     "build": "wsrun build",
-    "start": "cd ./packages/kartograf-ui && yarn start"
+    "start": "cd ./packages/webui && yarn start"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",

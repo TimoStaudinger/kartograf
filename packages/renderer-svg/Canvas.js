@@ -1,11 +1,9 @@
-import './Canvas.css'
 import React from 'react'
 import FilterDropShadow from '../utils/FilterDropShadow'
 import Grid from './Grid'
 import Shape, {getConnectorPosition} from '../shapes/Shape'
 import Connection from '../Connection'
 import {DropTarget} from 'react-dnd'
-import colors from '../../colors'
 
 const snapTo = (grid, value) => {
   const rem = value % grid
