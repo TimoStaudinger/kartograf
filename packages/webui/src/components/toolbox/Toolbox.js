@@ -32,11 +32,11 @@ const styles = theme => ({
   }
 })
 
-const Options = ({classes, mode, onChangeMode}) => 
+const Options = ({classes, mode, onSelectMode}) => 
   <Paper elevation={8} className={classes.paper}>
     <Typography variant='headline' component='h3' className={classes.header}>Toolbox</Typography>
     <List>
-      <ListItem button onClick={() => onChangeMode('pan')}>
+      <ListItem button onClick={() => onSelectMode('pan')}>
         <ListItemAvatar>
           <Avatar className={mode === 'pan' ? classes.selected : ''}>
             <PanToolIcon />
@@ -46,7 +46,7 @@ const Options = ({classes, mode, onChangeMode}) =>
       </ListItem>
 
       <ListSubheader>Draw</ListSubheader>
-      <ListItem button onClick={() => onChangeMode('draw')}>
+      <ListItem button onClick={() => onSelectMode('draw')}>
         <ListItemAvatar>
           <Avatar className={mode === 'draw' ? classes.selected : ''}>
             <BrushIcon />
@@ -54,7 +54,7 @@ const Options = ({classes, mode, onChangeMode}) =>
         </ListItemAvatar>
         <ListItemText primary="Rectangle" />
       </ListItem>
-      <ListItem button onClick={() => onChangeMode('drawIcon')}>
+      <ListItem button onClick={() => onSelectMode('drawIcon')}>
         <ListItemAvatar>
           <Avatar className={mode === 'drawIcon' ? classes.selected : ''}>
             <InsertEmoticonIcon />
