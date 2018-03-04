@@ -91,7 +91,7 @@ const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode,
         {selectedShape ? (
           <Options
             selectedShape={selectedShape}
-            onChangeShape={this.onChangeShape}
+            onChangeShape={onChangeShape}
           />
         ) : null}
 
