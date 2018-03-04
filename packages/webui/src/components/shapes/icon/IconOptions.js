@@ -5,7 +5,6 @@ import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
-// import colors from '../../../colors'
 import IconPicker from '../../IconPicker'
 
 const styles = theme => ({
@@ -67,7 +66,7 @@ class IconOptions extends React.Component {
         onClick={() => this.setState({showIconPicker: true})}
       >Pick icon</Button>,
       <Grid className={this.props.classes.colorPicker} container spacing={8}>
-        {/*colors.map((c, i) =>
+        {this.props.theme.colors.map((c, i) =>
           <Grid className={this.props.classes.colorPickerGridItem} item xs={1}>
             <Paper
               square
@@ -76,7 +75,7 @@ class IconOptions extends React.Component {
               onClick={() => this.props.onChangeShape(applyUpdates(this.props.shape, 'color', i))}
             />
           </Grid>
-        )*/}
+        )}
       </Grid>
     ]
   }

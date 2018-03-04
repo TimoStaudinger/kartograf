@@ -5,7 +5,6 @@ import {withStyles} from 'material-ui/styles'
 import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
-// import colors from '../../../colors'
 
 const styles = theme => ({
   formControl: {
@@ -40,7 +39,7 @@ const RectOptions = ({classes, shape, onChangeShape}) => [
     <Input id='name-simple' value={shape.label} onChange={e => onChangeShape(applyUpdates(shape, 'label', e.target.value))} />
   </FormControl>,
   <Grid className={classes.colorPicker} container spacing={8}>
-    {/*colors.map((c, i) =>
+    {this.props.theme.colors.map((c, i) =>
       <Grid className={classes.colorPickerGridItem} item xs={1}>
         <Paper
           square
@@ -49,7 +48,7 @@ const RectOptions = ({classes, shape, onChangeShape}) => [
           onClick={() => onChangeShape(applyUpdates(shape, 'color', i))}
          />
       </Grid>
-    )*/}
+    )}
   </Grid>
   // <FormControl margin="normal" className={classes.formControl} aria-describedby="name-helper-text">
   //   <InputLabel htmlFor="name-helper">Name</InputLabel>

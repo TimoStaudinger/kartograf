@@ -16,7 +16,7 @@ import MenuIcon from 'material-ui-icons/Menu'
 import Toolbox from '../toolbox/Toolbox'
 import Options from '../Options'
 
-import theme from './Theme'
+import appTheme from './Theme'
 
 const sidebarWidth = 400
 
@@ -62,8 +62,8 @@ const styles = theme => ({
   }
 })
 
-const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode, children}) => (
-  <MuiThemeProvider theme={theme}>
+const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode, children, theme}) => (
+  <MuiThemeProvider theme={appTheme}>
     <div className={classes.appFrame}>
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -92,6 +92,7 @@ const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode,
           <Options
             selectedShape={selectedShape}
             onChangeShape={onChangeShape}
+            theme={theme}
           />
         ) : null}
 

@@ -207,6 +207,7 @@ class Kartograf extends React.Component {
         onSelectMode={mode => this.setState({mode})}
         selectedShape={selectedShape}
         onChangeShape={this.onChangeShape}
+        theme={theme}
       >
         <Canvas
           shapes={this.state.shapes}
