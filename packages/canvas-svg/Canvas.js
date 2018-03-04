@@ -1,9 +1,9 @@
 import React from 'react'
-import FilterDropShadow from '../utils/FilterDropShadow'
+import PropTypes from 'prop-types'
+
+import FilterDropShadow from './FilterDropShadow'
 import Grid from './Grid'
-import Shape, {getConnectorPosition} from '../shapes/Shape'
-import Connection from '../Connection'
-import {DropTarget} from 'react-dnd'
+import Connection from './Connection'
 
 const snapTo = (grid, value) => {
   const rem = value % grid
@@ -22,7 +22,7 @@ const snapRectToGrid = rect => ({
   height: snapTo(20, rect.height)
 })
 
-const resolveConnection = (connection, shapes) => {
+const resolveConnection = (connection, shapes, getConnectorPosition) => {
   const fromShape = shapes.find(s => s.id === connection.from.id)
   const toShape = shapes.find(s => s.id === connection.to.id)
 
@@ -33,19 +33,6 @@ const resolveConnection = (connection, shapes) => {
     ...connection,
     fromCoords,
     toCoords
-  }
-}
-
-const shapeDropTarget = {
-  drop (props, monitor) {
-    const position = monitor.getClientOffset()
-    const shape = {
-      x: position.x,
-      y: position.y,
-      type: monitor.getItem().type
-    }
-    props.onAddShape(shape)
-    return shape
   }
 }
 
@@ -117,7 +104,7 @@ class Canvas extends React.Component {
       this.props.isDrawableSquare
     ) : null
 
-    return this.props.connectDropTarget(
+    return (
       <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, overflow: 'hidden'}}>
         <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
           <defs>
@@ -135,10 +122,10 @@ class Canvas extends React.Component {
             onDraw={this.onDraw}
           />
 
-          {this.props.data.shapes.map(r =>
-            <Shape
+          {this.props.shapes.map(r =>
+            <this.props.shape
               {...snapRectToGrid(r)}
-              color={colors[r.color]}
+              color={this.props.theme.colors[r.color]}
               key={r.id}
               id={r.id}
               filter='dropshadow'
@@ -166,7 +153,7 @@ class Canvas extends React.Component {
             />
           ) : null}
 
-          {this.props.data.connections.map(c => resolveConnection(c, this.props.data.shapes)).map(c =>
+          {this.props.connections.map(c => resolveConnection(c, this.props.shapes)).map(c =>
             <Connection {...c} />
           )}
         </svg>
@@ -175,8 +162,12 @@ class Canvas extends React.Component {
   }
 }
 
-export default DropTarget('shape', shapeDropTarget, (connector, monitor) => ({
-  connectDropTarget: connector.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop()
-}))(Canvas)
+Canvas.propTypes = {
+  theme: PropTypes.shape({
+    colors: PropTypes.object
+  }),
+  shape: PropTypes.element.isRequired,
+  getConnectorPosition: PropTypes.func.isRequired
+}
+
+export default Canvas

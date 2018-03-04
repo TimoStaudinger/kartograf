@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "dependencies": {
-    "@kartograf/renderer-svg": "0.1.0",
+    "@kartograf/canvas-svg": "0.1.0",
     "@kartograf/theme-material": "0.1.0",
     "material-ui": "^1.0.0-beta.34",
     "material-ui-icons": "^1.0.0-beta.17",

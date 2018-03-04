@@ -1,11 +1,13 @@
 import React from 'react'
 
-import Renderer from '@kartograf/renderer-svg'
+import Canvas from '@kartograf/canvas-svg'
 
 import App from './app/App'
-
 import ShapeBuilder from './shapes/ShapeBuilder'
-import {getConnectorPosition, getConnectors} from './shapes/Shape'
+import Shape, {getConnectorPosition, getConnectors} from './shapes/Shape'
+
+
+import theme from '@kartograf/theme-material'
 
 const findAdjacentConnector = (origin, x, y, shapes, threshold = 20) => {
   const originShape = shapes.find(s => s.id === origin.id)
@@ -47,7 +49,6 @@ class Kartograf extends React.Component {
     this.onSelect = this.onSelect.bind(this)
     this.onClearSelection = this.onClearSelection.bind(this)
     this.onChangeShape = this.onChangeShape.bind(this)
-    this.onChangeMode = this.onChangeMode.bind(this)
 
     this.state = {
       shapes: [],
@@ -203,11 +204,11 @@ class Kartograf extends React.Component {
     return (
       <App
         selectedMode={this.state.mode}
-        onSelctMode={mode => this.setState({mode})}
+        onSelectMode={mode => this.setState({mode})}
         selectedShape={selectedShape}
         onChangeShape={this.onChangeShape}
       >
-        <Renderer
+        <Canvas
           shapes={this.state.shapes}
           connections={this.state.connections}
           selected={this.state.selected}
@@ -222,6 +223,9 @@ class Kartograf extends React.Component {
           onAddShape={this.onAddShape}
           isDrawable={this.state.mode && this.state.mode.startsWith('draw')}
           isDrawableSquare={this.state.mode === 'drawIcon'}
+          theme={theme}
+          shape={Shape}
+          getConnectorPosition={getConnectorPosition}
         />
       </App>
     )

@@ -46,7 +46,7 @@ module.exports = {
   appHtml: resolveApp('packages/webui/public/index.html'),
   appIndexJs: resolveApp('packages/webui/src/index.js'),
   appPackageJson: resolveApp('packages/webui/package.json'),
-  appSrc: [resolveApp('packages/webui/src'), resolveApp('packages/renderer-svg'), resolveApp('packages/theme-material')],
+  appSrc: [resolveApp('packages/webui/src'), resolveApp('packages/canvas-svg'), resolveApp('packages/theme-material')],
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('config/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
