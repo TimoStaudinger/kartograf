@@ -17,11 +17,6 @@
     <img src="https://img.shields.io/travis/TimoSta/kartograf/master.svg?style=flat-square"
       alt="Build Status" />
   </a>
-  <!-- Test Coverage -->
-  <a href="https://codecov.io/github/TimoSta/kartograf">
-    <img src="https://img.shields.io/codecov/c/github/TimoSta/kartograf/master.svg?style=flat-square"
-      alt="Test Coverage" />
-  </a>
 </div>
 
 <div align="center">

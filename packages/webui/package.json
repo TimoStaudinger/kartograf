@@ -1,6 +1,7 @@
 {
   "name": "@kartograf/webui",
   "version": "0.1.0",
+  "license": "MIT",
   "dependencies": {
     "@kartograf/renderer-svg": "0.1.0",
     "@kartograf/theme-material": "0.1.0",
