@@ -32,14 +32,14 @@ const applyUpdates = (prevRect, field, value) => ({
   [field]: value
 })
 
-const RectOptions = ({classes, shape, onChangeShape}) => [
+const RectOptions = ({classes, shape, onChangeShape, theme}) => [
   <Typography variant='headline' component='h3' className={classes.header}>Options</Typography>,
   <FormControl margin='normal' className={classes.formControl}>
     <InputLabel htmlFor='name-simple'>Label</InputLabel>
     <Input id='name-simple' value={shape.label} onChange={e => onChangeShape(applyUpdates(shape, 'label', e.target.value))} />
   </FormControl>,
   <Grid className={classes.colorPicker} container spacing={8}>
-    {this.props.theme.colors.map((c, i) =>
+    {theme.colors.map((c, i) =>
       <Grid className={classes.colorPickerGridItem} item xs={1}>
         <Paper
           square

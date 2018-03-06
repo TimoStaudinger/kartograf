@@ -17,10 +17,11 @@ const styles = theme => ({
   }
 })
 
-const Options = ({classes, selectedShape, onChangeShape}) =>
+const Options = ({classes, selectedShape, onChangeShape, theme}) =>
   <Paper elevation={8} className={classes.paper}>
     <ShapeOptions
       shape={selectedShape}
+      theme={theme}
       onChangeShape={onChangeShape}
     />
   </Paper>
