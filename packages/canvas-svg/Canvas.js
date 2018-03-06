@@ -59,6 +59,35 @@ const calculateDrawingShadow = ({from, to}, isDrawingSquare) => {
   })
 }
 
+const calculateViewBox = (shapes, padding = 30) => {
+  let minX = null
+  let minY = null
+  let maxX = null
+  let maxY = null
+
+  shapes.forEach(s => {
+    if (s.width === 0) return
+
+    if (minX === null || s.x < minX) minX = s.x
+    if (minY === null || s.y < minY) minY = s.y
+    if (maxX === null || s.x + s.width > maxX) maxX = s.x + s.width
+    if (maxY === null || s.y + (s.height || s.width) > maxY)
+      maxY = s.y + (s.height || s.width)
+  })
+
+  minX -= padding
+  minY -= padding
+  maxX += padding
+  maxY += padding
+
+  const x = minX
+  const y = minY
+  const width = maxX - minX
+  const height = maxY - minY
+
+  return `${x} ${y} ${width} ${height}`
+}
+
 class Canvas extends React.Component {
   constructor(props) {
     super(props)
@@ -119,6 +148,11 @@ class Canvas extends React.Component {
       ? calculateDrawingShadow(this.state.drawing, this.props.isDrawableSquare)
       : null
 
+    const viewBox = this.props.printMode
+      ? calculateViewBox(this.props.shapes)
+      : undefined
+    const dimensions = this.props.printMode ? undefined : '100%'
+
     return (
       <div
         style={{
@@ -132,9 +166,10 @@ class Canvas extends React.Component {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="100%"
-          height="100%"
+          width={dimensions}
+          height={dimensions}
           ref={ref => (this.svgRef = ref)}
+          viewBox={viewBox}
         >
           <defs>
             <pattern
@@ -156,12 +191,14 @@ class Canvas extends React.Component {
           </defs>
           <FilterDropShadow id="dropshadow" />
 
-          <Grid
-            onClearSelection={this.props.onClearSelection}
-            onStartDrawing={this.onStartDrawing}
-            onStopDrawing={this.onStopDrawing}
-            onDraw={this.onDraw}
-          />
+          {this.props.printMode ? null : (
+            <Grid
+              onClearSelection={this.props.onClearSelection}
+              onStartDrawing={this.onStartDrawing}
+              onStopDrawing={this.onStopDrawing}
+              onDraw={this.onDraw}
+            />
+          )}
 
           {this.props.shapes.map(r => (
             <this.props.shape
@@ -217,14 +254,16 @@ class Canvas extends React.Component {
 }
 
 Canvas.propTypes = {
+  getConnectorPosition: PropTypes.func.isRequired,
+  printMode: PropTypes.bool,
+  selected: PropTypes.arrayOf(PropTypes.string),
+  shape: PropTypes.element.isRequired,
   theme: PropTypes.shape({
     colors: PropTypes.object
-  }),
-  shape: PropTypes.element.isRequired,
-  getConnectorPosition: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(PropTypes.string)
+  })
 }
 Canvas.defaultProps = {
+  printMode: false,
   selected: []
 }
 
