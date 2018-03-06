@@ -5,7 +5,7 @@ import Canvas from '@kartograf/canvas-svg'
 import App from './app/App'
 import ShapeBuilder from './shapes/ShapeBuilder'
 import Shape, {getConnectorPosition, getConnectors} from './shapes/Shape'
-
+import Printer from './Printer'
 
 import theme from '@kartograf/theme-material'
 
@@ -55,7 +55,8 @@ class Kartograf extends React.Component {
       connections: [],
       connecting: null,
       selected: [],
-      mode: 'pan'
+      mode: 'pan',
+      print: false
     }
   }
 
@@ -104,24 +105,7 @@ class Kartograf extends React.Component {
   }
 
   onDropConnector() {
-    this.setState(state => {
-      const dropTarget = findAdjacentConnector(
-        this.state.connecting.origin,
-        this.state.connecting.x,
-        this.state.connecting.y,
-        this.state.shapes
-      )
-      if (dropTarget) {
-        const newConnection = {
-          from: state.connecting.origin,
-          to: dropTarget
-        }
-        return {
-          connections: [...state.connections, newConnection],
-          connecting: null
-        }
-      } else return {connecting: null}
-    })
+    this.setState({print: true})
   }
 
   onResize(id, position, dx, dy) {
@@ -207,6 +191,7 @@ class Kartograf extends React.Component {
         onSelectMode={mode => this.setState({mode})}
         selectedShape={selectedShape}
         onChangeShape={this.onChangeShape}
+        onDownload={() => this.setState({print: true})}
         theme={theme}
       >
         <Canvas
@@ -228,6 +213,15 @@ class Kartograf extends React.Component {
           shape={Shape}
           getConnectorPosition={getConnectorPosition}
         />
+        {this.state.print ? (
+          <Printer
+            shapes={this.state.shapes}
+            connections={this.state.connections}
+            theme={theme}
+            shape={Shape}
+            onPrintDone={() => this.setState({print: false})}
+          />
+        ) : null}
       </App>
     )
   }

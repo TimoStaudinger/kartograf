@@ -62,7 +62,16 @@ const styles = theme => ({
   }
 })
 
-const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode, children, theme}) => (
+const App = ({
+  classes,
+  selectedShape,
+  selectedMode,
+  onChangeShape,
+  onSelectMode,
+  children,
+  theme,
+  onDownload
+}) => (
   <MuiThemeProvider theme={appTheme}>
     <div className={classes.appFrame}>
       <AppBar className={classes.appBar}>
@@ -80,7 +89,7 @@ const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode,
           <Button color="inherit">
             <ShareIcon />
           </Button>
-          <Button color="inherit">
+          <Button color="inherit" onClick={onDownload}>
             <FileDownloadIcon />
           </Button>
           <Button color="inherit">Sign in</Button>
@@ -99,7 +108,6 @@ const App = ({classes, selectedShape, selectedMode, onChangeShape, onSelectMode,
         <Toolbox mode={selectedMode} onSelectMode={onSelectMode} />
 
         {children}
-
       </main>
     </div>
   </MuiThemeProvider>
