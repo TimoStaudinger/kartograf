@@ -15,6 +15,7 @@ deploy:
       secure: "Flx0yOsEXcgl/C46QV2sxLHkpMO+eF2c3GGIT3Am16U/ZXRhn48ymoBUwbH9qEqbP8jgDLEgdC2dJhawsJDS7QeitCSo3lnzxbGS6DDrWJ1fa+8J3egDJRLJvtjtCh8/aB6rgsKHtbc3z8eGoTv2xilt06wWojONkJ61BfY6Sy10LYt8MamfwDIGqNTUG/XU5hoVpavyKOVqgryQkZ23LQNdJnXD+I3NvOlRJQA7rkBxG/Ktb0Z7rKq0G3t/qtg67ood3KsNdg/h3kaAvn+vs/X+w2ZQr8XGm3AfleYN0dyd4yTNLzXmsjQhGo6tal8nLprQ0YoV6vHPQrqzaUMfWB49Ig13URZfT2MnXbD1s8C4SvxN4XjyHmealDzpGdAtAi8F+n39nNFCifKSXw1xHSmeCTon8GDCYD0ZZSgnTYHX4rZlI+FbJb7271oNYIjky0C3DMXFiMbxaqznURBLsy+NczFxQSXOpUurD2augO7SVCslJ/zU1oRgK2ajwJ1n6QebPoOCr6zDKvfELACWH5xb+PKkI2fGgttmD5xDy/vTRJzw+igXxNsL+iyq69khKbfYqD0jj2YO7Q9VUnRjPlL8W5EGcqri6u6f4KiWNXfkbrngWXmeS4109NPxiL0/TUSSa/eVGVyW80noGTJ9PF5jntU1RZa5kQy9CfXH+9M="
     bucket: kartograf.io
     skip_cleanup: true
+    acl: public_read
     local_dir: packages/webui/build
     on:
       branch: stable
@@ -25,6 +26,7 @@ deploy:
       secure: "Flx0yOsEXcgl/C46QV2sxLHkpMO+eF2c3GGIT3Am16U/ZXRhn48ymoBUwbH9qEqbP8jgDLEgdC2dJhawsJDS7QeitCSo3lnzxbGS6DDrWJ1fa+8J3egDJRLJvtjtCh8/aB6rgsKHtbc3z8eGoTv2xilt06wWojONkJ61BfY6Sy10LYt8MamfwDIGqNTUG/XU5hoVpavyKOVqgryQkZ23LQNdJnXD+I3NvOlRJQA7rkBxG/Ktb0Z7rKq0G3t/qtg67ood3KsNdg/h3kaAvn+vs/X+w2ZQr8XGm3AfleYN0dyd4yTNLzXmsjQhGo6tal8nLprQ0YoV6vHPQrqzaUMfWB49Ig13URZfT2MnXbD1s8C4SvxN4XjyHmealDzpGdAtAi8F+n39nNFCifKSXw1xHSmeCTon8GDCYD0ZZSgnTYHX4rZlI+FbJb7271oNYIjky0C3DMXFiMbxaqznURBLsy+NczFxQSXOpUurD2augO7SVCslJ/zU1oRgK2ajwJ1n6QebPoOCr6zDKvfELACWH5xb+PKkI2fGgttmD5xDy/vTRJzw+igXxNsL+iyq69khKbfYqD0jj2YO7Q9VUnRjPlL8W5EGcqri6u6f4KiWNXfkbrngWXmeS4109NPxiL0/TUSSa/eVGVyW80noGTJ9PF5jntU1RZa5kQy9CfXH+9M="
     bucket: beta.kartograf.io
     skip_cleanup: true
+    acl: public_read
     local_dir: packages/webui/build
     on:
       branch: master
