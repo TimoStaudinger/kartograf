@@ -20,7 +20,7 @@
 </div>
 
 <div align="center">
-  <h3><a href="https://kartograf.io">kartograf.io</a></h3>
+  <h3><a href="https://kartograf.io">kartograf.io</a> | <a href="https://beta.kartograf.io">beta.kartograf.io</a></h3>
 </div>
 
 <div align="center">
