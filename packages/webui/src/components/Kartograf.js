@@ -174,7 +174,10 @@ class Kartograf extends React.Component {
 
   @keydown(Keys.delete)
   onDelete() {
-    console.log('deleting...')
+    this.setState(state => ({
+      shapes: state.shapes.filter(shape => !state.selected.includes(shape.id)),
+      selected: []
+    }))
   }
 
   render() {
