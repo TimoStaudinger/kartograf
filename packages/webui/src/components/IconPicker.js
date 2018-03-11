@@ -45,12 +45,12 @@ function Transition(props) {
 
 class IconPickerButton extends React.PureComponent {
   render() {
-    const {icon, classes} = this.props
+    const {icon, classes, onClick} = this.props
 
     return (
       <Grid item xs={2} className={classes.iconContainer}>
         <Tooltip title={icon.name}>
-          <Button>
+          <Button onClick={onClick}>
             <icon.component className={classes.icon} fontSize />
           </Button>
         </Tooltip>
@@ -100,7 +100,7 @@ class IconPicker extends React.Component {
   }
 
   render() {
-    const {onClose, classes, isOpen} = this.props
+    const {onClose, classes, isOpen, onPick} = this.props
 
     const filteredIcons =
       this.state.filter && this.state.filter.length
@@ -167,7 +167,7 @@ class IconPicker extends React.Component {
 
         <Grid className={classes.grid} container spacing={8}>
           {slicedIcons.map(i => (
-            <IconPickerButton icon={i} classes={classes} key={i.name} />
+            <IconPickerButton icon={i} classes={classes} key={i.name} onClick={() => onPick(i.name)} />
           ))}
         </Grid>
       </Dialog>

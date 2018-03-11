@@ -257,9 +257,9 @@ Canvas.propTypes = {
   getConnectorPosition: PropTypes.func.isRequired,
   printMode: PropTypes.bool,
   selected: PropTypes.arrayOf(PropTypes.string),
-  shape: PropTypes.element.isRequired,
+  shape: PropTypes.func.isRequired,
   theme: PropTypes.shape({
-    colors: PropTypes.object
+    colors: PropTypes.arrayOf(PropTypes.object)
   })
 }
 Canvas.defaultProps = {

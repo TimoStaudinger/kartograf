@@ -115,7 +115,7 @@ const App = ({
 
 App.propTypes = {
   classes: PropTypes.object.isRequired,
-  children: PropTypes.element,
+  children: PropTypes.node,
   selectedShape: PropTypes.object,
   onChangeShape: PropTypes.func.isRequired,
   selectedMode: PropTypes.string.isRequired,

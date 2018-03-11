@@ -1,6 +1,6 @@
 import React from 'react'
 import {withStyles} from 'material-ui/styles'
-import Button from 'material-ui/Button';
+import Button from 'material-ui/Button'
 
 import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
@@ -38,7 +38,7 @@ const applyUpdates = (prevRect, field, value) => ({
 })
 
 class IconOptions extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -46,36 +46,57 @@ class IconOptions extends React.Component {
     }
   }
 
-  render () {
+  render() {
+    const {onChangeShape, shape, theme, classes} = this.props
+
     return [
-      <Typography variant='headline' component='h3' className={this.props.classes.header}>Options</Typography>,
-      // <FormControl margin='normal' className={classes.formControl}>
-      //   <InputLabel htmlFor='name-simple'>Label</InputLabel>
-      //   <Input id='name-simple' value={shape.label} onChange={e => onChangeShape(applyUpdates(shape, 'label', e.target.value))} />
-      // </FormControl>,
+      <Typography
+        key="headline"
+        variant="headline"
+        component="h3"
+        className={classes.header}
+      >
+        Options
+      </Typography>,
+
       <IconPicker
+        key="iconPicker"
         isOpen={this.state.showIconPicker}
-        onPick={() => this.setState({showIconPicker: false})}
+        onPick={icon => {
+          this.setState({showIconPicker: false})
+          onChangeShape(applyUpdates(shape, 'icon', icon))
+        }}
         onClose={() => this.setState({showIconPicker: false})}
       />,
+
       <Button
-        className={this.props.classes.pickIconButton}
+        key="iconPickerButton"
+        className={classes.pickIconButton}
         variant="raised"
         size="large"
         color="primary"
         onClick={() => this.setState({showIconPicker: true})}
-      >Pick icon</Button>,
-      <Grid className={this.props.classes.colorPicker} container spacing={8}>
-        {this.props.theme.colors.map((c, i) =>
-          <Grid className={this.props.classes.colorPickerGridItem} item xs={1}>
+      >
+        Pick icon
+      </Button>,
+
+      <Grid
+        className={classes.colorPicker}
+        container
+        spacing={8}
+        key="colorPicker"
+      >
+        {theme.colors.map((c, i) => (
+          <Grid key={c.primary} className={classes.colorPickerGridItem} item xs={1}>
             <Paper
               square
               elevation={1}
-              className={this.props.classes.colorPickerPaper} style={{background: c.primary}}
-              onClick={() => this.props.onChangeShape(applyUpdates(this.props.shape, 'color', i))}
+              className={classes.colorPickerPaper}
+              style={{background: c.primary}}
+              onClick={() => onChangeShape(applyUpdates(shape, 'color', i))}
             />
           </Grid>
-        )}
+        ))}
       </Grid>
     ]
   }
