@@ -167,7 +167,12 @@ class IconPicker extends React.Component {
 
         <Grid className={classes.grid} container spacing={8}>
           {slicedIcons.map(i => (
-            <IconPickerButton icon={i} classes={classes} key={i.name} onClick={() => onPick(i.name)} />
+            <IconPickerButton
+              icon={i}
+              classes={classes}
+              key={i.name}
+              onClick={() => onPick(i.name)}
+            />
           ))}
         </Grid>
       </Dialog>

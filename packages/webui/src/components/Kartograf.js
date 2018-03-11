@@ -1,4 +1,5 @@
 import React from 'react'
+import keydown, {Keys} from 'react-keydown'
 
 import Canvas from '@kartograf/canvas-svg'
 
@@ -169,6 +170,11 @@ class Kartograf extends React.Component {
         shape => (shape.id === newShape.id ? newShape : shape)
       )
     }))
+  }
+
+  @keydown(Keys.delete)
+  onDelete() {
+    console.log('deleting...')
   }
 
   render() {
