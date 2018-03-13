@@ -51,6 +51,8 @@ class Kartograf extends React.Component {
     this.onClearSelection = this.onClearSelection.bind(this)
     this.onChangeShape = this.onChangeShape.bind(this)
 
+    this.debouncedOnMoveShape = this.makeDebouncedOnMoveShape()
+
     this.state = {
       shapes: [],
       connections: [],
@@ -75,6 +77,36 @@ class Kartograf extends React.Component {
         r => (r.id === id ? {...r, x: r.x + dx, y: r.y + dy} : r)
       )
     }))
+  }
+
+  makeDebouncedOnMoveShape(wait = 16) {
+    let lastId = 'foo'
+    let dxSum = 0
+    let dySum = 0
+
+    let timeout = null
+
+    const later = () => {
+      timeout = null
+
+      this.onMoveShape(lastId, dxSum, dySum)
+
+      dxSum = null
+      dySum = null
+    }
+
+    return function (id, dx, dy) {
+      if (lastId !== id) {
+        lastId = id
+        dxSum = dx
+        dySum = dy
+      } else {
+        dxSum += dx
+        dySum += dy
+      }
+
+      if (!timeout) timeout = setTimeout(later, wait)
+    }
   }
 
   onMoveConnector(origin, dx, dy) {
@@ -209,7 +241,7 @@ class Kartograf extends React.Component {
           selected={this.state.selected}
           currentDropTarget={currentDropTarget}
           connecting={this.state.connecting}
-          onMoveShape={this.onMoveShape}
+          onMoveShape={this.debouncedOnMoveShape}
           onMoveConnector={this.onMoveConnector}
           onDropConnector={this.onDropConnector}
           onResize={this.onResize}
