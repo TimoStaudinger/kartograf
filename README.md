@@ -1,7 +1,7 @@
 [![Kartograf](https://github.com/TimoSta/kartograf/raw/master/media/logo.jpg)](https://kartograf.io)
 
 <div align="center">
-  <strong>Beautiful charts made easy</strong>
+  <strong>Beautiful charts made easy.</strong>
 </div>
 
 <br />
