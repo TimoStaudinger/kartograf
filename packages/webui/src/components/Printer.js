@@ -28,8 +28,8 @@ class Printer extends React.Component {
 
     return (
       <Canvas
-        shapes={shapes}
         connections={connections}
+        shapes={shapes}
         theme={theme}
         shape={shape}
         printCallback={print => (this.print = print)}
@@ -40,9 +40,10 @@ class Printer extends React.Component {
 }
 
 Printer.propTypes = {
-  shapes: PropTypes.arrayOf(PropTypes.object).isRequired,
   connections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onPrintDone: PropTypes.func.isRequired
+  onPrintDone: PropTypes.func.isRequiredk
+  shapes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  theme: PropTypes.object.isRequired
 }
 
 export default Printer
