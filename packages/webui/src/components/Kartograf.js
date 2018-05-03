@@ -1,7 +1,7 @@
 import React from 'react'
 import keydown, {Keys} from 'react-keydown'
 
-import Canvas from '@kartograf/canvas-svg'
+import Canvas from './Canvas'
 
 import App from './app/App'
 import ShapeBuilder from './shapes/ShapeBuilder'
@@ -95,7 +95,7 @@ class Kartograf extends React.Component {
       dySum = null
     }
 
-    return function (id, dx, dy) {
+    return function(id, dx, dy) {
       if (lastId !== id) {
         lastId = id
         dxSum = dx

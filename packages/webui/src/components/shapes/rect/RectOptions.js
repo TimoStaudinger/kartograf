@@ -8,7 +8,8 @@ import Typography from 'material-ui/Typography'
 
 const styles = theme => ({
   formControl: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    width: `calc(100% - ${2 * theme.spacing.unit}px)`
   },
   colorPicker: {
     padding: theme.spacing.unit,

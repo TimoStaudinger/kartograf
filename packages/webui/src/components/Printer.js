@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Canvas from '@kartograf/canvas-svg/Canvas'
+import Canvas from './Canvas'
 
 class Printer extends React.Component {
   componentDidMount() {
