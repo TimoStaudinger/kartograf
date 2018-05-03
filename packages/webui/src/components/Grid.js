@@ -1,29 +1,37 @@
 import React from 'react'
 import {DraggableCore} from 'react-draggable'
 
-const Grid = ({onClearSelection, onStartDrawing, onDraw, onStopDrawing}) => [
+const getBufferedDimensions = (viewBox, interval) => ({
+  x: (Math.floor(viewBox.x / interval) - 10) * interval,
+  y: (Math.floor(viewBox.y / interval) - 10) * interval,
+  width: viewBox.width * 2,
+  height: viewBox.height * 2
+})
+
+const Grid = ({
+  onClick,
+  onStartDrag,
+  onDrag,
+  onStopDrag,
+  viewBox,
+  interval = 20
+}) => [
   <rect
-    x={0}
-    y={0}
-    width="100%"
-    height="100%"
+    {...getBufferedDimensions(viewBox, interval)}
     fill="#efefef"
-    onClick={onClearSelection}
+    onClick={onClick}
     key="background"
   />,
   <DraggableCore
-    onStart={(_, d) => onStartDrawing(d.lastX, d.lastY)}
-    onStop={(_, d) => onStopDrawing()}
-    onDrag={(_, d) => onDraw(d.deltaX, d.deltaY)}
+    onStart={(_, d) => onStartDrag(d.lastX, d.lastY)}
+    onStop={(_, d) => onStopDrag()}
+    onDrag={(_, d) => onDrag(d.deltaX, d.deltaY)}
     key="grid"
   >
     <rect
-      x={0}
-      y={0}
-      width="100%"
-      height="100%"
+      {...getBufferedDimensions(viewBox, interval)}
       fill="url(#grid)"
-      onClick={onClearSelection}
+      onClick={onClick}
     />
   </DraggableCore>
 ]

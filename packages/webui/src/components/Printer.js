@@ -41,7 +41,7 @@ class Printer extends React.Component {
 
 Printer.propTypes = {
   connections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onPrintDone: PropTypes.func.isRequiredk
+  onPrintDone: PropTypes.func.isRequired,
   shapes: PropTypes.arrayOf(PropTypes.object).isRequired,
   theme: PropTypes.object.isRequired
 }

@@ -92,12 +92,18 @@ class Canvas extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onDraw = this.onDraw.bind(this)
-    this.onStartDrawing = this.onStartDrawing.bind(this)
-    this.onStopDrawing = this.onStopDrawing.bind(this)
+    this.onDrag = this.onDrag.bind(this)
+    this.onStartDrag = this.onStartDrag.bind(this)
+    this.onStopDrag = this.onStopDrag.bind(this)
 
     this.state = {
-      drawing: null
+      drawing: null,
+      viewBox: {
+        x: 0,
+        y: 0,
+        width: 1000,
+        height: 1000
+      }
     }
   }
 
@@ -109,7 +115,7 @@ class Canvas extends React.Component {
     }
   }
 
-  onStartDrawing(x, y) {
+  onStartDrag(x, y) {
     if (this.props.isDrawable) {
       this.setState({
         drawing: {
@@ -120,7 +126,7 @@ class Canvas extends React.Component {
     }
   }
 
-  onDraw(dx, dy) {
+  onDrag(dx, dy) {
     if (this.props.isDrawable) {
       this.setState(state => ({
         drawing: {
@@ -131,10 +137,18 @@ class Canvas extends React.Component {
           }
         }
       }))
+    } else {
+      this.setState(state => ({
+        viewBox: {
+          ...state.viewBox,
+          x: state.viewBox.x - dx,
+          y: state.viewBox.y - dy
+        }
+      }))
     }
   }
 
-  onStopDrawing() {
+  onStopDrag() {
     if (this.props.isDrawable) {
       this.props.onAddShape(
         calculateDrawingShadow(this.state.drawing, this.props.isDrawableSquare)
@@ -150,7 +164,9 @@ class Canvas extends React.Component {
 
     const viewBox = this.props.printMode
       ? calculateViewBox(this.props.shapes)
-      : undefined
+      : `${this.state.viewBox.x} ${this.state.viewBox.y} ${
+          this.state.viewBox.width
+        } ${this.state.viewBox.height}`
     const dimensions = this.props.printMode ? undefined : '100%'
 
     return (
@@ -170,6 +186,7 @@ class Canvas extends React.Component {
           height={dimensions}
           ref={ref => (this.svgRef = ref)}
           viewBox={viewBox}
+          preserveAspectRatio="xMidYMid slice"
         >
           <defs>
             <pattern
@@ -193,10 +210,11 @@ class Canvas extends React.Component {
 
           {this.props.printMode ? null : (
             <Grid
-              onClearSelection={this.props.onClearSelection}
-              onStartDrawing={this.onStartDrawing}
-              onStopDrawing={this.onStopDrawing}
-              onDraw={this.onDraw}
+              onClick={this.props.onClearSelection}
+              onStartDrag={this.onStartDrag}
+              onStopDrag={this.onStopDrag}
+              onDrag={this.onDrag}
+              viewBox={this.state.viewBox}
             />
           )}
 
