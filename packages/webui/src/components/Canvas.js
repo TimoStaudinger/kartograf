@@ -88,6 +88,17 @@ const calculateViewBox = (shapes, padding = 30) => {
   return `${x} ${y} ${width} ${height}`
 }
 
+const transformScreenToSvgCoords = ({x, y}, svg) => {
+  const transformationMatrix = svg.getScreenCTM().inverse()
+
+  const svgPoint = svg.createSVGPoint()
+  svgPoint.x = x
+  svgPoint.y = y
+
+  const transformedPoint = svgPoint.matrixTransform(transformationMatrix)
+  return {x: transformedPoint.x, y: transformedPoint.y}
+}
+
 class Canvas extends React.Component {
   constructor(props) {
     super(props)
@@ -116,24 +127,30 @@ class Canvas extends React.Component {
   }
 
   onStartDrag(x, y) {
-    if (this.props.isDrawable) {
+    if (this.props.isDrawable && this.svgRef) {
+      const svgCoords = transformScreenToSvgCoords({x, y}, this.svgRef)
+
       this.setState({
         drawing: {
-          from: {x, y},
-          to: {x, y}
+          from: {...svgCoords},
+          to: {...svgCoords}
         }
       })
     }
   }
 
   onDrag(dx, dy) {
+    if (!this.svgRef) return
+
+    const svgCoords = transformScreenToSvgCoords({x: dx, y: dy}, this.svgRef)
+
     if (this.props.isDrawable) {
       this.setState(state => ({
         drawing: {
           ...state.drawing,
           to: {
-            x: state.drawing.to.x + dx,
-            y: state.drawing.to.y + dy
+            x: state.drawing.to.x + svgCoords.x,
+            y: state.drawing.to.y + svgCoords.y
           }
         }
       }))
@@ -141,8 +158,8 @@ class Canvas extends React.Component {
       this.setState(state => ({
         viewBox: {
           ...state.viewBox,
-          x: state.viewBox.x - dx,
-          y: state.viewBox.y - dy
+          x: state.viewBox.x - svgCoords.x,
+          y: state.viewBox.y - svgCoords.y
         }
       }))
     }
