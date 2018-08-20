@@ -30,3 +30,16 @@
     contributors
   </a>
 </div>
+
+Kartograf helps you draw charts and diagrams for your presentation, documentation or training material in a simple, no-fuss way.
+
+- **Bring your ideas to paper** without wasting time on layout and design
+- **Export your work** into several different output formats
+- **Share your results** and collaborate with friends and coworkers
+
+# Getting Started
+
+```bash
+yarn install
+yarn start
+```
