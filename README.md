@@ -30,6 +30,8 @@
     contributors
   </a>
 </div>
+  
+<br><br>
 
 Kartograf helps you draw charts and diagrams for your presentation, documentation or training material in a simple, no-fuss way.
 
