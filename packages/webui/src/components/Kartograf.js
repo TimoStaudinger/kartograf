@@ -1,42 +1,16 @@
 import React from 'react'
 import keydown, {Keys} from 'react-keydown'
 
+import {findAdjacentConnector} from '../util/geo'
+
 import Canvas from './Canvas'
 
 import App from './app/App'
 import ShapeBuilder from './shapes/ShapeBuilder'
-import Shape, {getConnectorPosition, getConnectors} from './shapes/Shape'
+import Shape, {getConnectorPosition} from './shapes/Shape'
 import Printer from './Printer'
 
 import theme from '@kartograf/theme-material'
-
-const findAdjacentConnector = (origin, x, y, shapes, threshold = 20) => {
-  const originShape = shapes.find(s => s.id === origin.id)
-
-  let adjacentConnector = null
-  shapes.find(shape => {
-    if (shape === originShape) return false
-
-    const connectors = getConnectors(shape)
-    return connectors.find(connector => {
-      const connectorPosition = getConnectorPosition(shape, connector)
-      if (
-        Math.abs(connectorPosition.x - x) < threshold &&
-        Math.abs(connectorPosition.y - y) < threshold
-      ) {
-        adjacentConnector = {
-          id: shape.id,
-          connector
-        }
-        return true
-      }
-
-      return false
-    })
-  })
-
-  return adjacentConnector
-}
 
 class Kartograf extends React.Component {
   constructor(props) {
