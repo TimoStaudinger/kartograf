@@ -1,10 +1,14 @@
 import React from 'react'
-import {FormControl} from 'material-ui/Form'
-import Input, {InputLabel} from 'material-ui/Input'
-import {withStyles} from 'material-ui/styles'
-import Paper from 'material-ui/Paper'
-import Grid from 'material-ui/Grid'
-import Typography from 'material-ui/Typography'
+
+import {
+  FormControl,
+  Input,
+  InputLabel,
+  Paper,
+  Grid,
+  Typography
+} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
 
 const styles = theme => ({
   formControl: {

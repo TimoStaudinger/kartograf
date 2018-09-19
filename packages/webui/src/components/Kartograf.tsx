@@ -1,5 +1,6 @@
 import React from 'react'
-import keydown, {Keys} from 'react-keydown'
+import produce from 'immer'
+import Mousetrap from 'mousetrap'
 
 import {findAdjacentConnector} from '../util/geo'
 
@@ -7,13 +8,34 @@ import Canvas from './Canvas'
 
 import App from './app/App'
 import ShapeBuilder from './shapes/ShapeBuilder'
-import Shape, {getConnectorPosition} from './shapes/Shape'
+import ShapeComponent, {getConnectorPosition} from './shapes/Shape'
 import Printer from './Printer'
 
 import theme from '@kartograf/theme-material'
 
-class Kartograf extends React.Component {
-  constructor(props) {
+interface Connection {}
+interface Shape {
+  id: string
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+interface Props {}
+interface State {
+  shapes?: Shape[]
+  connections?: Connection[]
+  connecting?: {x: number; y: number; origin: {id: string; connector: string}}
+  selected?: string[]
+  mode?: string
+  print?: boolean
+}
+
+class Kartograf extends React.Component<Props, State> {
+  debouncedOnMoveShape: Function = null
+
+  constructor(props: Props) {
     super(props)
 
     this.onDropConnector = this.onDropConnector.bind(this)
@@ -24,6 +46,7 @@ class Kartograf extends React.Component {
     this.onSelect = this.onSelect.bind(this)
     this.onClearSelection = this.onClearSelection.bind(this)
     this.onChangeShape = this.onChangeShape.bind(this)
+    this.onDelete = this.onDelete.bind(this)
 
     this.debouncedOnMoveShape = this.makeDebouncedOnMoveShape()
 
@@ -37,7 +60,15 @@ class Kartograf extends React.Component {
     }
   }
 
-  onSelect(id) {
+  componentDidMount() {
+    Mousetrap.bind('del', this.onDelete)
+  }
+
+  componentWillUnmount() {
+    Mousetrap.unbind('del')
+  }
+
+  onSelect(id: string) {
     this.setState({selected: [id]})
   }
 
@@ -45,12 +76,20 @@ class Kartograf extends React.Component {
     this.setState({selected: []})
   }
 
-  onMoveShape(id, dx, dy) {
-    this.setState(state => ({
-      shapes: state.shapes.map(
-        r => (r.id === id ? {...r, x: r.x + dx, y: r.y + dy} : r)
-      )
-    }))
+  onMoveShape(id: string, dx: number, dy: number) {
+    this.setState(
+      (state): State => ({
+        shapes: state.shapes.map(
+          r =>
+            r.id === id
+              ? produce(r, draft => {
+                  draft.x += dx
+                  draft.y += dy
+                })
+              : r
+        )
+      })
+    )
   }
 
   makeDebouncedOnMoveShape(wait = 16) {
@@ -58,7 +97,7 @@ class Kartograf extends React.Component {
     let dxSum = 0
     let dySum = 0
 
-    let timeout = null
+    let timeout: number = null
 
     const later = () => {
       timeout = null
@@ -69,7 +108,7 @@ class Kartograf extends React.Component {
       dySum = null
     }
 
-    return function(id, dx, dy) {
+    return function(id: string, dx: number, dy: number) {
       if (lastId !== id) {
         lastId = id
         dxSum = dx
@@ -79,46 +118,53 @@ class Kartograf extends React.Component {
         dySum += dy
       }
 
-      if (!timeout) timeout = setTimeout(later, wait)
+      if (!timeout) timeout = window.setTimeout(later, wait)
     }
   }
 
-  onMoveConnector(origin, dx, dy) {
-    this.setState(state => {
-      const originShape = state.shapes.find(r => r.id === origin.id)
-      const originConnectorPosition = getConnectorPosition(
-        originShape,
-        origin.connector
-      )
+  onMoveConnector(
+    origin: {id: string; connector: string},
+    dx: number,
+    dy: number
+  ) {
+    this.setState(
+      (state: State): State => {
+        const originShape = state.shapes.find(r => r.id === origin.id)
 
-      const prevX = state.connecting
-        ? state.connecting.x
-        : originConnectorPosition.x
-      const prevY = state.connecting
-        ? state.connecting.y
-        : originConnectorPosition.y
+        const originConnectorPosition = getConnectorPosition(
+          originShape,
+          origin.connector
+        )
 
-      const newX = prevX + dx
-      const newY = prevY + dy
+        const prevX = state.connecting
+          ? state.connecting.x
+          : originConnectorPosition.x
+        const prevY = state.connecting
+          ? state.connecting.y
+          : originConnectorPosition.y
 
-      return {
-        connecting: {
-          origin,
-          x: newX,
-          y: newY
+        const newX = prevX + dx
+        const newY = prevY + dy
+
+        return {
+          connecting: {
+            origin,
+            x: newX,
+            y: newY
+          }
         }
       }
-    })
+    )
   }
 
   onDropConnector() {
-    this.setState({print: true})
+    // this.setState({print: true})
   }
 
-  onResize(id, position, dx, dy) {
-    let newRect = this.state.shapes.find(r => r.id === id)
+  onResize(shapeId: string, cornerId: string, dx: number, dy: number) {
+    let newRect = this.state.shapes.find(r => r.id === shapeId)
 
-    switch (position) {
+    switch (cornerId) {
       case 'topLeft':
         newRect = {
           ...newRect,
@@ -158,19 +204,31 @@ class Kartograf extends React.Component {
     }
 
     this.setState(state => ({
-      shapes: state.shapes.map(r => (r.id === id ? newRect : r))
+      shapes: state.shapes.map(r => (r.id === shapeId ? newRect : r))
     }))
   }
 
-  onAddShape({x, y, width, height}) {
+  onAddShape({
+    x,
+    y,
+    width,
+    height
+  }: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }) {
     const type = this.state.mode === 'drawIcon' ? 'icon' : 'rect'
 
     this.setState(state => ({
-      shapes: [...state.shapes, ShapeBuilder.create(x, y, width, height, type)]
+      shapes: produce(state.shapes, draft => {
+        draft.push(ShapeBuilder.create(x, y, width, height, type) as Shape)
+      })
     }))
   }
 
-  onChangeShape(newShape) {
+  onChangeShape(newShape: Shape) {
     this.setState(state => ({
       shapes: state.shapes.map(
         shape => (shape.id === newShape.id ? newShape : shape)
@@ -178,7 +236,6 @@ class Kartograf extends React.Component {
     }))
   }
 
-  @keydown(Keys.delete)
   onDelete() {
     this.setState(state => ({
       shapes: state.shapes.filter(shape => !state.selected.includes(shape.id)),
@@ -203,7 +260,7 @@ class Kartograf extends React.Component {
     return (
       <App
         selectedMode={this.state.mode}
-        onSelectMode={mode => this.setState({mode})}
+        onSelectMode={(mode: string) => this.setState({mode})}
         selectedShape={selectedShape}
         onChangeShape={this.onChangeShape}
         onDownload={() => this.setState({print: true})}
@@ -225,7 +282,7 @@ class Kartograf extends React.Component {
           isDrawable={this.state.mode && this.state.mode.startsWith('draw')}
           isDrawableSquare={this.state.mode === 'drawIcon'}
           theme={theme}
-          shape={Shape}
+          shape={ShapeComponent}
           getConnectorPosition={getConnectorPosition}
         />
         {this.state.print ? (
@@ -233,7 +290,7 @@ class Kartograf extends React.Component {
             shapes={this.state.shapes}
             connections={this.state.connections}
             theme={theme}
-            shape={Shape}
+            shape={ShapeComponent}
             onPrintDone={() => this.setState({print: false})}
           />
         ) : null}

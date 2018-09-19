@@ -1,18 +1,21 @@
 import React from 'react'
-import Paper from 'material-ui/Paper'
-import { withStyles } from 'material-ui/styles'
-import List, {
+
+import {
+  Paper,
+  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-} from 'material-ui/List';
-import BrushIcon from 'material-ui-icons/Brush'
-import InsertEmoticonIcon from 'material-ui-icons/InsertEmoticon'
-import PanToolIcon from 'material-ui-icons/OpenWith'
-import Avatar from 'material-ui/Avatar'
-import Typography from 'material-ui/Typography'
-import ListSubheader from 'material-ui/List/ListSubheader';
-
+  ListSubheader,
+  Avatar,
+  Typography
+} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {
+  Brush as BrushIcon,
+  InsertEmoticon as InsertEmoticonIcon,
+  OpenWith as PanToolIcon
+} from '@material-ui/icons'
 
 const styles = theme => ({
   paper: {
@@ -32,9 +35,11 @@ const styles = theme => ({
   }
 })
 
-const Options = ({classes, mode, onSelectMode}) => 
+const Options = ({classes, mode, onSelectMode}) => (
   <Paper elevation={8} className={classes.paper}>
-    <Typography variant='headline' component='h3' className={classes.header}>Toolbox</Typography>
+    <Typography variant="headline" component="h3" className={classes.header}>
+      Toolbox
+    </Typography>
     <List>
       <ListItem button onClick={() => onSelectMode('pan')}>
         <ListItemAvatar>
@@ -64,6 +69,6 @@ const Options = ({classes, mode, onSelectMode}) =>
       </ListItem>
     </List>
   </Paper>
-
+)
 
 export default withStyles(styles)(Options)

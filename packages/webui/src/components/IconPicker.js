@@ -1,19 +1,24 @@
 import React from 'react'
-import Dialog from 'material-ui/Dialog'
-import {withStyles} from 'material-ui/styles'
-import Grid from 'material-ui/Grid'
-import Button from 'material-ui/Button'
-import AppBar from 'material-ui/AppBar'
-import Toolbar from 'material-ui/Toolbar'
-import IconButton from 'material-ui/IconButton'
-import Typography from 'material-ui/Typography'
-import CloseIcon from 'material-ui-icons/Close'
-import Slide from 'material-ui/transitions/Slide'
-import Tooltip from 'material-ui/Tooltip'
+
+import {
+  Dialog,
+  Grid,
+  Button,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Tooltip,
+  Paper,
+  InputAdornment,
+  TextField,
+  Slide
+} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import {Search as SearchIcon, Close as CloseIcon} from '@material-ui/icons'
+import {grey} from '@material-ui/core/colors'
+
 import {allIcons} from './IconLibrary'
-import {Paper, InputAdornment, TextField} from 'material-ui'
-import SearchIcon from 'material-ui-icons/Search'
-import {grey} from 'material-ui/colors'
 
 const styles = {
   appBar: {

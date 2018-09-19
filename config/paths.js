@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const path = require('path');
-const fs = require('fs');
-const url = require('url');
+const path = require("path");
+const fs = require("fs");
+const url = require("url");
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
@@ -12,7 +12,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 const envPublicUrl = process.env.PUBLIC_URL;
 
 function ensureSlash(path, needsSlash) {
-  const hasSlash = path.endsWith('/');
+  const hasSlash = path.endsWith("/");
   if (hasSlash && !needsSlash) {
     return path.substr(path, path.length - 1);
   } else if (!hasSlash && needsSlash) {
@@ -34,22 +34,22 @@ const getPublicUrl = appPackageJson =>
 function getServedPath(appPackageJson) {
   const publicUrl = getPublicUrl(appPackageJson);
   const servedUrl =
-    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
+    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : "/");
   return ensureSlash(servedUrl, true);
 }
 
 // config after eject: we're in ./config/
 module.exports = {
-  dotenv: resolveApp('.env'),
-  appBuild: resolveApp('packages/webui/build'),
-  appPublic: resolveApp('packages/webui/public'),
-  appHtml: resolveApp('packages/webui/public/index.html'),
-  appIndexJs: resolveApp('packages/webui/src/index.js'),
-  appPackageJson: resolveApp('packages/webui/package.json'),
-  appSrc: [resolveApp('packages/webui/src'), resolveApp('packages/canvas-svg'), resolveApp('packages/theme-material')],
-  yarnLockFile: resolveApp('yarn.lock'),
-  testsSetup: resolveApp('config/setupTests.js'),
-  appNodeModules: resolveApp('node_modules'),
-  publicUrl: getPublicUrl(resolveApp('packages/webui/package.json')),
-  servedPath: getServedPath(resolveApp('packages/webui/package.json')),
+  dotenv: resolveApp(".env"),
+  appBuild: resolveApp("packages/webui/build"),
+  appPublic: resolveApp("packages/webui/public"),
+  appHtml: resolveApp("packages/webui/public/index.html"),
+  appIndexJs: resolveApp("packages/webui/src/index.tsx"),
+  appPackageJson: resolveApp("packages/webui/package.json"),
+  appSrc: [resolveApp("packages/webui/src"), resolveApp("theme-material")],
+  yarnLockFile: resolveApp("yarn.lock"),
+  testsSetup: resolveApp("config/setupTests.js"),
+  appNodeModules: resolveApp("node_modules"),
+  publicUrl: getPublicUrl(resolveApp("packages/webui/package.json")),
+  servedPath: getServedPath(resolveApp("packages/webui/package.json"))
 };

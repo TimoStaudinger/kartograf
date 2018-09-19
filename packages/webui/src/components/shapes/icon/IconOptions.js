@@ -1,10 +1,8 @@
 import React from 'react'
-import {withStyles} from 'material-ui/styles'
-import Button from 'material-ui/Button'
 
-import Paper from 'material-ui/Paper'
-import Grid from 'material-ui/Grid'
-import Typography from 'material-ui/Typography'
+import {Button, Paper, Grid, Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+
 import IconPicker from '../../IconPicker'
 
 const styles = theme => ({
@@ -87,7 +85,12 @@ class IconOptions extends React.Component {
         key="colorPicker"
       >
         {theme.colors.map((c, i) => (
-          <Grid key={c.primary} className={classes.colorPickerGridItem} item xs={1}>
+          <Grid
+            key={c.primary}
+            className={classes.colorPickerGridItem}
+            item
+            xs={1}
+          >
             <Paper
               square
               elevation={1}
