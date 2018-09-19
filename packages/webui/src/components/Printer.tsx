@@ -1,8 +1,21 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+
+import Shape from '../geo/Shape'
+import Connection from '../geo/Connection'
+
 import Canvas from './Canvas'
 
-class Printer extends React.Component {
+interface Props {
+  onPrintDone(): void
+  shapes: Shape[]
+  connections: Connection[]
+  shape: any // TODO
+  theme: any // TODO
+}
+
+class Printer extends React.Component<Props> {
+  private print: () => string = null
+
   componentDidMount() {
     if (this.print) {
       const data = this.print()
@@ -32,18 +45,11 @@ class Printer extends React.Component {
         shapes={shapes}
         theme={theme}
         shape={shape}
-        printCallback={print => (this.print = print)}
+        printCallback={(print: () => string) => (this.print = print)}
         printMode
       />
     )
   }
-}
-
-Printer.propTypes = {
-  connections: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onPrintDone: PropTypes.func.isRequired,
-  shapes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  theme: PropTypes.object.isRequired
 }
 
 export default Printer

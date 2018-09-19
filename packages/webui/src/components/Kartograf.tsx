@@ -4,6 +4,9 @@ import Mousetrap from 'mousetrap'
 
 import {findAdjacentConnector} from '../util/geo'
 
+import Shape from '../geo/Shape'
+import Connection from '../geo/Connection'
+
 import Canvas from './Canvas'
 
 import App from './app/App'
@@ -12,15 +15,6 @@ import ShapeComponent, {getConnectorPosition} from './shapes/Shape'
 import Printer from './Printer'
 
 import theme from '@kartograf/theme-material'
-
-interface Connection {}
-interface Shape {
-  id: string
-  x: number
-  y: number
-  width: number
-  height: number
-}
 
 interface Props {}
 interface State {
